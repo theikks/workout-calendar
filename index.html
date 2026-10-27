@@ -9,24 +9,24 @@
 @media(prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#181c22;--ink:#eef0f3;--mute:#8d96a3;--line:#262c35;--acc:#6b9bff;--done:#34c88a;--rest:#59616e}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
-main{max-width:520px;margin:0 auto;padding:16px}
+main{max-width:520px;margin:0 auto;padding:16px;overflow-x:hidden}
 header{display:flex;align-items:center;justify-content:space-between;margin:8px 0 4px}
 h1{font-size:20px;margin:0}
 .nav button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:10px;width:40px;height:40px;font-size:18px;cursor:pointer}
 .stat{color:var(--mute);font-size:14px;margin:0 0 12px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .dow{text-align:center;color:var(--mute);font-size:13px;padding:4px 0}
-.cell{aspect-ratio:1/1.15;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.cell{min-width:0;min-height:62px;overflow:hidden;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
 .cell.empty{background:transparent;border:0;cursor:default}
-.cell .n{font-size:13px;color:var(--mute)}
-.cell .t{font-size:18px;line-height:1}
+.cell .n{font-size:12px;color:var(--mute)}
+.cell .t{font-size:16px;line-height:1}
 .cell .bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
 .cell .bar i{display:block;height:100%;background:var(--acc)}
 .cell.today{outline:2px solid var(--acc)}
 .cell.done{background:color-mix(in srgb,var(--done) 18%,var(--card));border-color:var(--done)}
 .cell.done .bar i{background:var(--done)}
 .cell.rest .t{opacity:.45}
-.legend{color:var(--mute);font-size:13px;margin-top:12px}
+.legend{color:var(--mute);font-size:13px;margin-top:16px;clear:both}
 dialog{border:0;border-radius:16px;padding:0;width:min(92vw,440px);background:var(--card);color:var(--ink)}
 dialog::backdrop{background:#0008}
 .box{padding:18px}
