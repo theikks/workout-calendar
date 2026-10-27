@@ -3,17 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <title>운동 캘린더</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0d10;--card:#14181d;--card2:#1b2027;--ink:#f2f4f7;--mute:#8a94a3;--line:#242a33;--lime:#c6ff3d;--pink:#ff2e97;--sky:#38bdf8}
+:root{--bg:#0b0d10;--card:#14181d;--card2:#1b2027;--ink:#f2f4f7;--mute:#8a94a3;--line:#242a33;--lime:#c6ff3d;--limefill:#c6ff3d;--pink:#ff2e97;--sky:#38bdf8;--track:#ffffff14;--cb:#4a5463;--glow:#1c2a10;--tennis:#c6ff3d}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f4f6f8;--card:#ffffff;--card2:#eceff3;--ink:#12161b;--mute:#5d6877;--line:#dde2e8;--lime:#4a7a00;--limefill:#c6ff3d;--pink:#e0126f;--sky:#0284c7;--track:#0000000f;--cb:#a3adba;--glow:#e6f5c8;--tennis:#7fb800}}
+:root[data-theme=light]{--bg:#f4f6f8;--card:#ffffff;--card2:#eceff3;--ink:#12161b;--mute:#5d6877;--line:#dde2e8;--lime:#4a7a00;--limefill:#c6ff3d;--pink:#e0126f;--sky:#0284c7;--track:#0000000f;--cb:#a3adba;--glow:#e6f5c8;--tennis:#7fb800}
 *{box-sizing:border-box}
 html{font-size:16px}
 @media(min-width:900px){html{font-size:18px}}
-body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#1c2a10 0,transparent 60%),var(--bg);color:var(--ink);font:1rem/1.5 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;min-height:100vh}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,var(--glow) 0,transparent 60%),var(--bg);color:var(--ink);font:1rem/1.5 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;min-height:100vh}
 .num,h1,.big{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;font-style:italic;font-weight:800;letter-spacing:.01em}
 button{font:inherit;color:inherit}
 main{max-width:1120px;margin:0 auto;padding:16px}
@@ -24,6 +26,7 @@ main{max-width:1120px;margin:0 auto;padding:16px}
 h1{margin:0;font-size:2.4rem;line-height:1;text-transform:uppercase}
 h1 span{color:var(--lime)}
 .nav{display:flex;gap:8px;align-items:center}
+.nav #themebtn{font-size:1.1rem}
 .nav .syncb{width:auto;height:44px;padding:0 12px;font-size:.78rem;font-weight:700;color:var(--mute)}
 .nav .syncb[data-st=ok]{color:var(--sky);border-color:var(--sky)}
 .nav .syncb[data-st=err]{color:var(--pink);border-color:var(--pink)}
@@ -57,9 +60,9 @@ h1 span{color:var(--lime)}
 .cell.rest .n,.cell.none .n{color:var(--mute)}
 .cell .tg{display:none;font-size:.55rem;font-weight:800;letter-spacing:.12em;color:var(--c);min-height:.8em}
 @media(min-width:900px){.cell .tg{display:block}}
-.cell .dg{width:60%;height:3px;border-radius:2px;background:#ffffff14;overflow:hidden}
+.cell .dg{width:60%;height:3px;border-radius:2px;background:var(--track);overflow:hidden}
 .cell .dg i{display:block;height:100%;background:var(--sky);width:var(--d,0%)}
-.cell.today{border-color:var(--pink);background:#ff2e9714;box-shadow:0 0 0 1px #ff2e9766,0 0 12px #ff2e9755}
+.cell.today{border-color:var(--pink);background:color-mix(in srgb,var(--pink) 8%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--pink) 40%,transparent),0 0 12px color-mix(in srgb,var(--pink) 30%,transparent)}
 .cell.today .n{color:var(--pink)}
 .cell.sel:not(.today){border-color:var(--line);background:var(--card2)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:.75rem;color:var(--mute)}
@@ -75,18 +78,18 @@ h1 span{color:var(--lime)}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 12px;background:var(--bg);padding:4px;border-radius:12px}
 .tabs button{border:0;background:transparent;padding:9px;border-radius:9px;font-weight:700;cursor:pointer;color:var(--mute)}
 .tabs button.on{background:var(--card2);color:var(--ink)}
-.pbar{height:8px;border-radius:4px;background:#ffffff14;overflow:hidden;margin:4px 0 6px}
+.pbar{height:8px;border-radius:4px;background:var(--track);overflow:hidden;margin:4px 0 6px}
 .pbar i{display:block;height:100%;background:var(--c,var(--lime));transition:width .25s}
 .sec{margin:14px 0 2px;font-size:.78rem;font-weight:800;letter-spacing:.06em;color:var(--c,var(--lime))}
 .sec small{color:var(--mute);font-weight:400;letter-spacing:0;margin-left:6px}
 label.item{display:flex;gap:12px;align-items:flex-start;padding:9px 2px;border-top:1px solid var(--line);cursor:pointer;font-size:.92rem}
-label.item input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border:2px solid #4a5463;border-radius:7px;margin-top:1px;display:grid;place-items:center;cursor:pointer;background:transparent}
+label.item input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--cb);border-radius:7px;margin-top:1px;display:grid;place-items:center;cursor:pointer;background:transparent}
 label.item input:checked{background:var(--c,var(--lime));border-color:var(--c,var(--lime))}
 label.item input:checked::after{content:"✓";color:#0b0d10;font-weight:900;font-size:.85rem}
 label.item input:checked+span{color:var(--mute);text-decoration:line-through}
 .row{display:flex;gap:8px;margin-top:14px}
 .btn{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-weight:700;cursor:pointer}
-.btn.pri{background:var(--lime);border-color:var(--lime);color:#0b0d10}
+.btn.pri{background:var(--limefill);border-color:var(--limefill);color:#0b0d10}
 .btn.sm{flex:none;padding:6px 12px;font-size:.8rem;border-radius:9px}
 
 /* diet */
@@ -130,7 +133,7 @@ dialog .panel{border:0;position:static;max-height:none;overflow:visible}
 <main>
   <div class="top">
     <div class="brand"><small>HYOIK</small><h1>Workout <span>Log</span></h1></div>
-    <div class="nav"><button id="syncbtn" class="syncb" data-st="off" type="button">☁ 동기화 설정</button><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
+    <div class="nav"><button id="themebtn" type="button" aria-label="테마 전환">🌓</button><button id="syncbtn" class="syncb" data-st="off" type="button">☁ 동기화 설정</button><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
   </div>
   <div class="stats">
     <div class="stat"><b class="num" id="s1">0</b><span>이번 달 운동 완료</span></div>
@@ -189,7 +192,7 @@ const TYPE = [
   {c: "#22c55e", tag: "LEGS", title: "하체 (무릎 재활)"},
   {c: "#eab308", tag: "FREE", title: "자유운동 (약점보완)"},
   {c: "#64748b", tag: "REST", title: "휴식", rest: true},
-  {c: "#c6ff3d", tag: "TENNIS", title: "테니스 9시"},
+  {c: "var(--tennis)", tag: "TENNIS", title: "테니스 9시"},
 ];
 
 function planOf(d) {
@@ -461,6 +464,11 @@ $("legend").replaceChildren(...TYPE.filter(t => !t.rest).map(t => h("span", {}, 
 $("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
 $("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
 matchMedia("(min-width:900px)").addEventListener("change", render);
+const themes = ["auto", "light", "dark"], tIcon = {auto: "🌓", light: "☀️", dark: "🌙"};
+let theme = "auto"; try { theme = localStorage.getItem("workout-theme") || "auto"; } catch (e) {}
+const applyTheme = () => { if (theme === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.dataset.theme = theme; $("themebtn").textContent = tIcon[theme]; $("themebtn").title = "테마: " + theme; };
+$("themebtn").onclick = () => { theme = themes[(themes.indexOf(theme) + 1) % 3]; try { localStorage.setItem("workout-theme", theme); } catch (e) {} applyTheme(); };
+applyTheme();
 $("syncbtn").onclick = syncDialog;
 render();
 setSync(token ? "idle" : "off");
