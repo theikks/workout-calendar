@@ -88,6 +88,13 @@ label.item{display:flex;gap:12px;align-items:flex-start;padding:9px 2px;border-t
 label.item input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--cb);border-radius:7px;margin-top:1px;display:grid;place-items:center;cursor:pointer;background:transparent}
 label.item input:checked{background:var(--c,var(--lime));border-color:var(--c,var(--lime))}
 label.item input:checked::after{content:"✓";color:#0b0d10;font-weight:900;font-size:.85rem}
+label.item span{flex:1}
+.gbtn{flex:none;align-self:center;border:1px solid var(--line);background:var(--card2);border-radius:99px;padding:3px 10px;font-size:.72rem;font-weight:700;cursor:pointer;color:var(--mute)}
+.gbtn.on,.gbtn:hover{border-color:var(--c);color:var(--c)}
+.guide{background:var(--bg);border-radius:12px;padding:10px 12px;margin:2px 0 8px}
+.guide svg{display:block;width:100%;max-width:260px;height:auto;margin:0 auto 6px}
+.guide ul{margin:0;padding-left:18px;font-size:.84rem;line-height:1.55}
+.guide a{display:inline-block;margin-top:6px;font-size:.8rem;color:var(--sky)}
 label.item input:checked+span{color:var(--mute);text-decoration:line-through}
 .row{display:flex;gap:8px;margin-top:14px}
 .btn{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-weight:700;cursor:pointer}
@@ -111,6 +118,7 @@ label.item input:checked+span{color:var(--mute);text-decoration:line-through}
 .rec h4{margin:0 0 6px;font-size:.85rem}
 .rec .opt{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:.86rem}
 .rec .opt span.m{display:block;color:var(--mute);font-size:.75rem}
+.rec .rcp{margin-top:3px;line-height:1.45}
 .rec p{margin:0 0 4px;color:var(--mute);font-size:.8rem}
 .pick{background:var(--bg);border-radius:12px;padding:10px;margin:8px 0}
 .pick input[type=search],.pick input[type=text],.pick input[type=number]{width:100%;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px;color:var(--ink);font:inherit;font-size:.9rem}
@@ -241,11 +249,35 @@ const DB = [];
 const add = (g, n, k, p, e) => DB.push({g, n, k, p, e});
 [["슬로우캘리 클래식 참치포케 (현미)", 543, 29], ["슬로우캘리 육회포케 (현미)", 590, 31], ["슬로우캘리 클래식 연어포케 (현미)", 569, 30]].forEach(x => add("slow", ...x, 1));
 [["칠리베이컨 포케볼", 485.2, 18.7], ["닭가슴살 추가", 60.8, 12.5], ["에그 추가", 72.5, 6.7]].forEach(x => add("salady", ...x));
-[["프로틴 쉐이크 1스쿱 (물)", 120, 24], ["마이프로틴 임팩트 웨이 1스쿱", 103, 21], ["하이뮨 프로틴 밸런스 액티브 250ml", 130, 20], ["하이뮨 프로틴 밸런스 분말 1회분", 145, 20], ["바나나 1개", 105, 1], ["아메리카노", 5, 0], ["삶은 계란 1개", 78, 6.3], ["그릭요거트 150g (무가당)", 100, 15], ["닭가슴살 소시지 1개", 110, 15], ["닭가슴살 100g (편의점)", 110, 23], ["참치캔 1개 (기름 뺀 살코기)", 130, 20], ["단백질 음료 1개", 150, 20], ["두부 150g", 120, 12], ["현미밥 2/3공기", 210, 4.5], ["현미밥 1공기", 310, 6.5]].forEach(x => add("etc", ...x, 1));
-[["맥도날드 더블 쿼터파운더 치즈 (미국 수치)", 740, 48], ["맥도날드 쿼터파운더 치즈", 552, 33], ["서브웨이 로스트 치킨 15cm", 320, 23], ["서브웨이 로스트 치킨 30cm", 640, 46], ["서브웨이 스테이크&치즈 15cm", 355, 28], ["서브웨이 스테이크&치즈 30cm", 710, 56], ["서브웨이 쉬림프 15cm", 241, 16], ["삼계탕 1인분", 900, 60], ["설렁탕·곰탕 1그릇 (밥 포함)", 550, 28], ["소고기 스테이크 200g", 450, 50], ["연어 구이 100g", 200, 20], ["고등어구이 1/2마리", 220, 20]].forEach(x => add("out", ...x, 1));
+[["프로틴 쉐이크 1스쿱 (물)", 120, 24], ["마이프로틴 임팩트 웨이 1스쿱", 103, 21], ["하이뮨 프로틴 밸런스 액티브 250ml", 130, 20], ["하이뮨 프로틴 밸런스 분말 1회분", 145, 20], ["바나나 1개", 105, 1], ["아메리카노", 5, 0], ["삶은 계란 1개", 78, 6.3], ["그릭요거트 150g (무가당)", 100, 15], ["닭가슴살 소시지 1개", 110, 15], ["닭가슴살 100g (편의점)", 110, 23], ["참치캔 1개 (기름 뺀 살코기)", 130, 20], ["단백질 음료 1개", 150, 20], ["두부 150g", 120, 12], ["편의점 닭가슴살 스테이크 1팩 (100g)", 120, 22], ["구운 계란 2개", 150, 12], ["무가당 두유 190ml", 90, 7], ["스트링치즈 1개", 70, 5], ["프로틴 바 1개", 200, 15], ["고구마 100g", 130, 1.4], ["현미밥 2/3공기", 210, 4.5], ["현미밥 1공기", 310, 6.5]].forEach(x => add("etc", ...x, 1));
+[["맥도날드 더블 쿼터파운더 치즈 (미국 수치)", 740, 48], ["맥도날드 쿼터파운더 치즈", 552, 33], ["서브웨이 로스트 치킨 15cm", 320, 23], ["서브웨이 로스트 치킨 30cm", 640, 46], ["서브웨이 스테이크&치즈 15cm", 355, 28], ["서브웨이 스테이크&치즈 30cm", 710, 56], ["서브웨이 쉬림프 15cm", 241, 16], ["삼계탕 1인분", 900, 60], ["설렁탕·곰탕 1그릇 (밥 포함)", 550, 28], ["소고기 스테이크 200g", 450, 50], ["연어 구이 100g", 200, 20], ["고등어구이 1/2마리", 220, 20], ["KFC 징거버거", 553, 33], ["맘스터치 싸이버거", 594, 27], ["버거킹 와퍼 (미국 수치)", 670, 31], ["굽네 오리지널 4조각 (약 200g)", 380, 62], ["광어회 200g", 220, 42], ["족발 살코기 200g", 460, 46], ["보쌈 수육 200g", 560, 40], ["닭갈비 1인분 (밥 제외)", 550, 45], ["장어구이 1인분", 600, 38], ["육회 200g", 330, 42], ["소고기 쌀국수 1그릇", 500, 30], ["연어 포케 (일반 포케집)", 550, 30], ["서브웨이 로스트 치킨 샐러드", 180, 22]].forEach(x => add("out", ...x, 1));
+// 집밥 레시피: [이름, kcal, 단백질, 만드는 법] (1인분 추정)
+const HOME = [
+  ["닭가슴살 스테이크 + 구운 채소 + 고구마", 420, 42, "닭가슴살 150g 소금·후추·올리브유 → 중불 팬 앞뒤 5~6분, 파프리카·양파·브로콜리 같이 굽기. 고구마 100g은 전자레인지 4분"],
+  ["소고기 우둔 버섯볶음 + 현미밥 2/3", 520, 40, "우둔 150g을 간장 1큰술·다진마늘에 10분 재우기 → 버섯·양파와 센불 3~4분 볶기"],
+  ["연어 에어프라이어 구이 + 샐러드", 450, 34, "연어 150g 소금·후추·레몬즙 → 에어프라이어 180℃ 12분. 샐러드는 발사믹 1큰술"],
+  ["두부 계란 스크램블", 380, 32, "두부 1/2모 으깨 물기 빼기 → 계란 3개와 섞어 약불 스크램블, 대파·후추"],
+  ["닭가슴살 카레 + 현미밥 2/3", 550, 40, "닭가슴살 150g·양파·당근 볶기 → 물 300ml + 카레 1/2인분 넣고 끓이기"],
+  ["참치 계란 볶음밥", 560, 40, "현미밥 2/3 + 참치 1캔(기름 빼기) + 계란 2개, 대파 기름 조금으로 볶기"],
+  ["그릭요거트 프로틴 볼", 330, 32, "그릭요거트 200g + 프로틴 1/2스쿱 섞고 블루베리·견과 10g 올리기 (운동 직후·간식)"],
+  ["닭가슴살 또띠아 랩", 400, 35, "통밀 또띠아 1장에 닭가슴살 120g·양상추·토마토·머스터드 넣어 말기"],
+  ["돼지 안심 수육 + 쌈채소", 380, 45, "안심 200g을 된장 1큰술·월계수잎 넣은 물에 25분 삶기 → 얇게 썰어 쌈"],
+  ["집 샤브샤브 (우둔 + 두부 + 채소)", 450, 45, "멸치·다시마 육수에 배추·버섯·두부 → 우둔 150g 살짝 데쳐 먹기, 폰즈 소스"],
+  ["계란 흰자 오믈렛", 300, 30, "계란 2개 + 흰자 4개 풀어 시금치·버섯 넣고 약불, 슬라이스 치즈 1장"],
+  ["고등어구이 + 두부 된장국 + 밥 2/3", 600, 36, "고등어 반 마리 에어프라이어 200℃ 15분, 두부 된장국 곁들이기"],
+  ["닭가슴살 두부 스테이크", 300, 32, "닭가슴살 100g + 두부 100g 다져 계란 1개·소금 넣고 반죽 → 동그랗게 굽기"],
+  ["새우 브로콜리 볶음", 300, 32, "새우 150g + 브로콜리·마늘을 올리브유 조금에 볶고 굴소스 1작은술"],
+  ["오징어 볶음 (덜 맵게)", 320, 32, "오징어 1마리(200g) + 양파·양배추, 고추장 1큰술·간장 1큰술로 볶기"],
+  ["닭안심 간장조림", 400, 40, "닭안심 200g + 간장 1.5큰술·물 100ml·마늘·알룰로스 조금 넣고 졸이기"],
+  ["소고기 미역국 + 밥 2/3", 450, 25, "참기름 조금에 우둔 80g·불린 미역 볶고 물 넣어 20분, 국간장으로 간"],
+  ["닭가슴살 현미 김밥 1줄", 420, 30, "현미밥 2/3에 닭가슴살 80g·계란 지단·시금치·당근 넣어 말기"],
+  ["프로틴 오트 팬케이크", 480, 42, "오트 40g + 계란 2개 + 프로틴 1스쿱 + 바나나 1/2 갈아서 약불에 굽기"],
+  ["소고기 스테이크 + 아스파라거스", 500, 48, "부채살·채끝 180g 소금·후추, 센불 앞뒤 2~3분 굽고 5분 레스팅"],
+];
+HOME.forEach(([n, k, p, r]) => DB.push({g: "home", n, k, p, e: 1, r}));
 [["구내식당 한 끼 (밥·국·반찬)", 700, 25], ["구내식당 + 단백질 반찬 추가", 900, 43]].forEach(x => add("canteen", ...x, 1));
 [["소고기 샤브샤브 + 채소", 550, 45], ["닭가슴살 샐러드 + 현미밥 2/3", 500, 40], ["생선구이 정식 (밥 2/3)", 600, 38], ["순두부찌개 + 계란2 + 밥 2/3", 580, 30], ["소고기 구이 + 쌈 + 밥 1/2", 650, 42], ["연어 스테이크 + 샐러드", 550, 38], ["닭볶음탕(살코기) + 밥 2/3", 650, 40], ["두부·계란·불고기 정식", 600, 42]].forEach(x => add("dinner", ...x, 1));
-const GN = {slow: "슬로우캘리", salady: "샐러디 (자주 먹는 것)", etc: "프로틴·간식", out: "외식·패스트푸드", canteen: "구내식당", dinner: "저녁 메뉴"};
+const GN = {slow: "슬로우캘리", salady: "샐러디 (자주 먹는 것)", etc: "프로틴·간식·편의점", home: "집밥 레시피", out: "외식·패스트푸드", canteen: "구내식당", dinner: "저녁 메뉴"};
 const F = n => DB.find(x => x.n === n);
 const COMBOS = [
   ["슬로우캘리 클래식 참치포케 (현미)"], ["슬로우캘리 육회포케 (현미)"],
@@ -399,7 +431,9 @@ function workoutTab(d, p, k) {
       const idx = i++, cb = h("input", {type: "checkbox"});
       cb.checked = checked(k).includes(idx);
       cb.onchange = () => { const a = new Set(checked(k)); cb.checked ? a.add(idx) : a.delete(idx); store[k] = [...a]; persist("c", k); render(); };
-      el.append(h("label", {class: "item"}, cb, h("span", {}, t)));
+      const g = guideOf(t), gid = k + ":" + idx;
+      el.append(h("label", {class: "item"}, cb, h("span", {}, t), g ? h("button", {class: "gbtn" + (openG === gid ? " on" : ""), type: "button", onclick: e => { e.preventDefault(); e.stopPropagation(); openG = openG === gid ? null : gid; render(); }}, "동작") : ""));
+      if (g && openG === gid) el.append(guideBox(g));
     });
   });
   el.append(h("div", {class: "row"}, h("button", {class: "btn pri", type: "button", onclick: () => { store[k] = p.items.map((_, j) => j); persist("c", k); render(); }}, "운동 전부 완료")));
@@ -440,6 +474,13 @@ function dietTab(d, k) {
   }
   el.append(rec);
 
+  const hm = h("div", {class: "rec"}, h("h4", {}, "오늘의 집밥 추천"));
+  const hd = Math.floor(d / 864e5), homes = DB.filter(x => x.g === "home");
+  [0, 1].map(j => homes[(hd * 2 + j) % homes.length]).forEach(f => hm.append(h("div", {class: "opt"},
+    h("div", {}, f.n, h("span", {class: "m"}, `${f.k}kcal · 단백질 ${f.p}g (추정)`), h("span", {class: "m rcp"}, f.r)),
+    h("button", {class: "btn sm", type: "button", onclick: () => { log(k, "dinner", f); render(); }}, "기록"))));
+  el.append(hm);
+
   const dn = DB.filter(x => x.g === "dinner" || x.g === "out").sort((a, b) => Math.abs(a.p - Math.max(left, 20)) - Math.abs(b.p - Math.max(left, 20))).slice(0, 3);
   const rd = h("div", {class: "rec"}, h("h4", {}, left > 0 ? `저녁 추천 (남은 단백질 ${r1(left)}g 기준)` : "저녁 추천"));
   dn.forEach(f => rd.append(h("div", {class: "opt"}, h("div", {}, f.n, h("span", {class: "m"}, `${f.k}kcal · 단백질 ${f.p}g (추정)`)), h("button", {class: "btn sm", type: "button", onclick: () => { log(k, "dinner", f); render(); }}, "기록"))));
@@ -473,6 +514,139 @@ function picker(k, slot) {
     log(k, slot, {n: nm.value.trim(), k: +kc.value || 0, p: +pr.value || 0}); pick = null; render();
   }}, "추가");
   box.append(q, list, h("div", {class: "cu"}, nm, kc, pr, ad));
+  return box;
+}
+
+/* ---------- 운동 동작 가이드 (간단한 막대인형 애니메이션 + 자세 포인트) ---------- */
+// 각도: 0=위, 90=앞(오른쪽), 180=아래. m:"s" 옆모습, "f" 정면. a→b 사이를 반복
+const P = {
+  pulldown: {m: "s", pr: [{t: "rect", p: [52, 80, 32, 6]}, {t: "cable", from: [76, 6], to: "W"}, {t: "bar", at: "W", len: 26}], a: {hx: 70, hy: 80, t: -10, ua: 10, fa: 10, th: 90, sh: 180}, b: {ua: 195, fa: 15}},
+  row: {m: "s", pr: [{t: "rect", p: [38, 95, 34, 6]}, {t: "line", p: [104, 78, 104, 104]}, {t: "cable", from: [150, 84], to: "W"}, {t: "bar", at: "W", len: 8, v: 1}], a: {hx: 55, hy: 95, t: 0, ua: 90, fa: 90, th: 85, sh: 100}, b: {t: -5, ua: 200, fa: 95}},
+  dbrow: {m: "s", pr: [{t: "rect", p: [96, 94, 48, 6]}, {t: "db", at: "W"}], a: {hx: 60, hy: 68, t: 80, ua: 180, fa: 180, ua2: 140, fa2: 180, th: 170, sh: 185}, b: {ua: -60, fa: 180}},
+  straightarm: {m: "s", pr: [{t: "cable", from: [132, 14], to: "W"}, {t: "bar", at: "W", len: 14}], a: {hx: 60, hy: 62, t: 15, ua: 60, fa: 60, th: 180, sh: 180}, b: {ua: 170, fa: 170}},
+  curl: {m: "s", pr: [{t: "db", at: "W"}], a: {hx: 60, hy: 62, t: 0, ua: 180, fa: 180, th: 180, sh: 180}, b: {ua: 185, fa: 20}},
+  backext: {m: "s", pr: [{t: "line", p: [62, 62, 80, 80]}, {t: "line", p: [42, 104, 30, 92]}], a: {hx: 70, hy: 72, t: 150, rel: 1, ua: 160, fa: 30, th: 225, sh: 225}, b: {t: 45}},
+  ohp: {m: "s", pr: [{t: "rect", p: [50, 82, 30, 6]}, {t: "line", p: [56, 82, 48, 30]}, {t: "db", at: "W"}], a: {hx: 65, hy: 82, t: -5, ua: 160, fa: 0, th: 90, sh: 180}, b: {ua: 5, fa: 5}},
+  lateral: {m: "f", pr: [{t: "db", at: "W"}, {t: "db", at: "W2"}], a: {hy: 66, a: 12, fa: 12, ps: 1, l: 6, l2: 0}, b: {a: 85, fa: 88}},
+  reardelt: {m: "f", pr: [{t: "db", at: "W"}, {t: "db", at: "W2"}], a: {hy: 66, a: 40, fa: 40, ps: .3, l: 6, l2: 0}, b: {a: 88, fa: 88, ps: 1}},
+  shrug: {m: "f", pr: [{t: "db", at: "W"}, {t: "db", at: "W2"}], a: {hy: 66, a: 6, fa: 6, ps: 1, up: 0, l: 6, l2: 0}, b: {up: 6}},
+  pecdeck: {m: "f", pr: [{t: "rect", p: [66, 60, 28, 8]}], a: {hy: 66, a: 90, fa: 180, ps: 1, l: 20, l2: 0}, b: {ps: .25}},
+  deadbug: {m: "s", pr: [{t: "line", p: [20, 106, 150, 106]}], a: {hx: 70, hy: 100, t: 90, ua: 0, fa: 0, th: 0, sh: -90, ua2: 0, fa2: 0, th2: 0, sh2: -90}, b: {ua: 85, fa: 85, th2: -80, sh2: -85}},
+  plank: {m: "s", pr: [{t: "line", p: [10, 99, 150, 99]}], a: {hx: 75, hy: 88, t: 78, ua: 180, fa: 90, th: 258, sh: 258}, b: {hy: 86}},
+  chestpress: {m: "s", pr: [{t: "rect", p: [45, 82, 30, 6]}, {t: "line", p: [52, 82, 44, 32]}, {t: "bar", at: "W", len: 10, v: 1}], a: {hx: 60, hy: 82, t: -10, ua: 200, fa: 80, th: 90, sh: 180}, b: {ua: 95, fa: 90}},
+  incline: {m: "s", pr: [{t: "line", p: [60, 92, 22, 60]}, {t: "db", at: "W"}], a: {hx: 55, hy: 88, t: -55, ua: 150, fa: 10, th: 90, sh: 180}, b: {ua: 20, fa: 20}},
+  pushdown: {m: "s", pr: [{t: "cable", from: [78, 4], to: "W"}, {t: "bar", at: "W", len: 12}], a: {hx: 60, hy: 62, t: 8, ua: 185, fa: 40, th: 180, sh: 180}, b: {fa: 178}},
+  ohext: {m: "s", pr: [{t: "cable", from: [18, 92], to: "W"}, {t: "bar", at: "W", len: 8}], a: {hx: 60, hy: 66, t: 15, ua: 15, fa: 200, th: 180, sh: 180}, b: {fa: 20}},
+  crunch: {m: "s", pr: [{t: "line", p: [10, 98, 150, 98]}, {t: "cable", from: [78, 4], to: "W"}], a: {hx: 60, hy: 76, t: 5, rel: 1, ua: 20, fa: 170, th: 180, sh: 270}, b: {t: 100}},
+  legpress: {m: "s", pr: [{t: "line", p: [50, 85, 22, 58]}, {t: "plate", at: "A", ang: 150, len: 26}], a: {hx: 50, hy: 85, t: -60, ua: 150, fa: 120, th: 30, sh: 120}, b: {th: 62, sh: 58}},
+  rdl: {m: "s", pr: [{t: "db", at: "W"}], a: {hx: 60, hy: 60, t: 0, ua: 180, fa: 180, th: 175, sh: 185}, b: {hx: 52, hy: 62, t: 80, th: 165, sh: 185}},
+  hipthrust: {m: "s", pr: [{t: "rect", p: [18, 72, 22, 18]}, {t: "disc", at: "H", r: 7}], a: {hx: 60, hy: 95, t: -41, rel: 1, ua: 175, fa: 160, th: 60, sh: 165}, b: {hx: 68, hy: 80, t: -75, th: 95, sh: 180}},
+  legcurl: {m: "s", pr: [{t: "line", p: [25, 87, 100, 87]}, {t: "pad", at: "A"}], a: {hx: 75, hy: 82, t: -90, ua: -100, fa: -80, th: 90, sh: 90}, b: {sh: -15}},
+  legext: {m: "s", pr: [{t: "rect", p: [45, 75, 30, 6]}, {t: "line", p: [50, 75, 44, 30]}, {t: "pad", at: "A"}], a: {hx: 60, hy: 75, t: -5, ua: 170, fa: 150, th: 90, sh: 180}, b: {sh: 92}},
+  tke: {m: "s", pr: [{t: "line", p: [20, 60, 20, 108]}, {t: "cable", from: [20, 84], to: "K"}], a: {hx: 62, hy: 60, t: 0, ua: 180, fa: 170, th: 168, sh: 196, th2: 180, sh2: 180}, b: {th: 180, sh: 180}},
+  abduct: {m: "f", pr: [{t: "rect", p: [62, 64, 36, 6]}], a: {hy: 66, a: 20, fa: 30, ps: .8, l: 8, l2: 0}, b: {l: 32, l2: 5}},
+  calf: {m: "s", pr: [{t: "line", p: [30, 104, 100, 104]}], a: {hx: 60, hy: 61, t: 0, ua: 180, fa: 180, th: 180, sh: 180, ft: 90}, b: {hy: 54, ft: 150}},
+  squat: {m: "s", pr: [{t: "rect", p: [28, 86, 20, 18]}, {t: "db", at: "W"}], a: {hx: 67, hy: 62, t: 0, ua: 160, fa: 10, th: 180, sh: 180}, b: {hx: 40, hy: 84, t: 25, th: 85, sh: 165}},
+  pushup: {m: "s", pr: [{t: "line", p: [10, 105, 150, 105]}, {t: "rect", p: [78, 100, 16, 5]}], a: {hx: 57, hy: 83.5, t: 60, ua: 180, fa: 180, th: 240, sh: 240}, b: {hx: 60, hy: 90, t: 70, ua: 220, fa: 150, th: 250, sh: 250}},
+  facepull: {m: "s", pr: [{t: "cable", from: [150, 28], to: "W"}, {t: "bar", at: "W", len: 8}], a: {hx: 60, hy: 62, t: -5, ua: 80, fa: 80, th: 180, sh: 180}, b: {ua: 265, fa: 60}},
+  balance: {m: "s", pr: [{t: "line", p: [30, 104, 100, 104]}], a: {hx: 60, hy: 62, t: -2, ua: 170, fa: 170, th: 180, sh: 180, th2: 95, sh2: 180}, b: {t: 2}},
+};
+const PUSHUP = ["손은 어깨너비보다 조금 넓게", "머리~발 일직선 유지하며 가슴을 내리기", "힘들면 무릎 대거나 벤치를 짚고(인클라인)"];
+const G = {
+  "랫풀다운": ["pulldown", ["가슴을 살짝 내밀고 상체는 10~15° 뒤로", "팔꿈치를 옆구리 쪽으로 끌어내려 바를 쇄골 앞까지", "올라갈 땐 천천히, 어깨가 귀 쪽으로 따라 올라가지 않게"]],
+  "시티드 케이블 로우": ["row", ["허리 곧게 세우고 무릎은 살짝 굽히기", "손잡이를 배꼽 쪽으로, 어깨뼈를 뒤로 모으기", "상체를 뒤로 젖혀 반동 쓰지 않기"]],
+  "원암 덤벨 로우": ["dbrow", ["한 손·한 무릎을 벤치에 대고 등은 평평하게", "팔꿈치를 엉덩이 쪽으로 당기기", "몸통이 돌아가지 않게 고정"]],
+  "덤벨로우": ["dbrow", ["상체를 숙이고 등은 평평하게", "팔꿈치를 엉덩이 쪽으로 당기기", "허리가 굽지 않게 복부에 힘"]],
+  "스트레이트암 풀다운": ["straightarm", ["팔꿈치는 살짝만 굽힌 채 고정", "등(광배)으로 바를 허벅지까지 쓸어내리기", "허리 젖히지 말고 엉덩이 살짝 뒤로"]],
+  "덤벨 컬": ["curl", ["팔꿈치를 옆구리에 붙이고 고정", "손목은 곧게 펴고 올리기", "내릴 때 2초 천천히, 몸 흔들기 금지"]],
+  "백익스텐션": ["backext", ["골반이 패드 끝에 걸리게 높이 조절", "몸이 일직선이 될 때까지만 올리기 (과하게 젖히지 않기)", "엉덩이에 힘 주고 천천히 내리기"]],
+  "앉아서 숄더프레스": ["ohp", ["등받이에 등 붙이고 복부에 힘", "덤벨을 귀 옆에서 머리 위로 밀기", "팔꿈치는 몸보다 살짝 앞쪽, 허리 젖히지 않기"]],
+  "사이드 레터럴 레이즈": ["lateral", ["팔꿈치 살짝 굽히고 어깨 높이까지만", "손보다 팔꿈치가 먼저 올라가는 느낌", "반동 없이 가벼운 무게로 천천히"]],
+  "사이드레이즈": ["lateral", ["팔꿈치 살짝 굽히고 어깨 높이까지만", "손보다 팔꿈치가 먼저 올라가는 느낌", "반동 없이 가벼운 무게로 천천히"]],
+  "리어델트 플라이": ["reardelt", ["머신 패드에 가슴 대고 팔은 앞으로", "팔을 옆으로 벌리며 어깨 뒤쪽 수축", "어깨를 으쓱하지 않기"]],
+  "덤벨 슈러그": ["shrug", ["팔은 편 채로 어깨만 귀 쪽으로 올리기", "위에서 1초 멈췄다 천천히 내리기", "어깨를 돌리지 말고 위아래로만"]],
+  "데드버그": ["deadbug", ["허리를 바닥에 붙인 채 유지", "반대쪽 팔·다리를 천천히 뻗기", "숨을 내쉬며 뻗고 돌아오기"]],
+  "플랭크": ["plank", ["팔꿈치는 어깨 바로 아래", "머리~발뒤꿈치 일직선, 엉덩이 처지거나 들리지 않게", "배와 엉덩이에 힘, 호흡은 계속"]],
+  "체스트프레스": ["chestpress", ["손잡이가 가슴 중간 높이에 오게 의자 조절", "어깨뼈 뒤로 모으고 가슴 내밀기", "팔을 완전히 잠그지 말고 천천히 돌아오기"]],
+  "인클라인 덤벨 프레스": ["incline", ["벤치 30~45°, 어깨뼈 모아 고정", "덤벨을 윗가슴 위로 밀어 올리기", "내릴 때 팔꿈치는 몸통과 45~60°"]],
+  "펙덱 플라이": ["pecdeck", ["등을 등받이에 붙이고 가슴 내밀기", "팔꿈치로 모은다는 느낌으로 가운데로", "벌릴 때 어깨 앞이 당기기 직전까지만"]],
+  "케이블 푸시다운": ["pushdown", ["팔꿈치를 옆구리에 고정", "손을 허벅지까지 밀어 내리고 1초 수축", "올라올 때 팔꿈치가 들리지 않게"]],
+  "오버헤드 케이블 익스텐션": ["ohext", ["케이블 등지고 서서 한 발 앞으로", "팔꿈치는 머리 옆에 고정", "팔을 앞위로 펴며 삼두 수축"]],
+  "케이블 크런치": ["crunch", ["무릎 꿇고 로프를 머리 옆에", "엉덩이는 고정, 배를 말아 팔꿈치를 무릎 쪽으로", "허리를 숙이는 게 아니라 복근으로 말기"]],
+  "한다리 레그프레스": ["legpress", ["⚠️ 무릎은 90°까지만 굽히기", "발 전체로 밀고 무릎이 안쪽으로 모이지 않게", "다 폈을 때 무릎 잠그지 않기, 왼쪽 먼저"]],
+  "덤벨 루마니안 데드리프트": ["rdl", ["무릎은 살짝 굽힌 채 고정", "엉덩이를 뒤로 빼며 덤벨을 정강이까지", "허리는 곧게, 엉덩이 조이며 일어나기"]],
+  "힙쓰러스트": ["hipthrust", ["벤치에 날개뼈 아래쪽 걸치기", "턱 당기고 엉덩이로 골반 밀어 올리기", "위에서 몸통이 일직선, 허리 젖히지 않기"]],
+  "레그컬": ["legcurl", ["패드가 발목 위에 오게 조절", "골반이 들리지 않게 엎드려 고정", "올릴 때 1초 수축, 내릴 때 천천히"]],
+  "레그익스텐션": ["legext", ["⚠️ 가벼운 무게로", "무릎 축을 기계 축에 맞추기", "다 폈을 때 1초 멈추고 천천히 내리기"]],
+  "케이블 TKE": ["tke", ["무릎 뒤에 밴드나 케이블 스트랩 걸기", "살짝 굽힌 무릎을 끝까지 펴며 허벅지 안쪽 수축", "⚠️ 왼쪽 먼저, 통증 없는 범위로"]],
+  "힙 어브덕션 + 어덕션": ["abduct", ["어브덕션: 다리를 바깥으로 밀어 엉덩이 옆 자극", "어덕션: 패드를 바꿔 안쪽으로 모으기", "반동 없이 천천히"]],
+  "카프레이즈": ["calf", ["발 앞쪽으로 서서 뒤꿈치 최대한 올리기", "위에서 1초 멈추기", "천천히 내려 종아리 늘리기"]],
+  "고블릿 박스스쿼트": ["squat", ["덤벨을 가슴 앞에 세워 들기", "박스에 살짝 앉았다 일어나기", "⚠️ 무릎이 안쪽으로 모이지 않게, 아프면 박스를 높이기"]],
+  "푸시업": ["pushup", PUSHUP], "인클라인 푸시업": ["pushup", PUSHUP],
+  "페이스풀": ["facepull", ["로프를 얼굴 높이에 설정", "팔꿈치를 높게 벌리며 귀 옆으로 당기기", "어깨 뒤쪽·날개뼈 모으기"]],
+  "한발서기": ["balance", ["한 발로 서서 무릎 살짝 굽히기", "골반이 기울지 않게 엉덩이에 힘", "⚠️ 왼쪽 먼저, 잡을 곳 옆에서"]],
+  "클램쉘": [null, ["옆으로 누워 무릎 45° 굽히기", "발은 붙인 채 위쪽 무릎만 열기", "골반이 뒤로 넘어가지 않게"]],
+};
+const guideOf = t => { const k = Object.keys(G).sort((a, b) => b.length - a.length).find(k => t.startsWith(k)); return k && {k, pt: G[k][0], cues: G[k][1]}; };
+
+const LEN = {T: 32, N: 4, R: 6, UA: 17, FA: 16, TH: 22, SH: 21, FT: 7};
+const vec = (p, l, deg) => [p[0] + l * Math.sin(deg * Math.PI / 180), p[1] - l * Math.cos(deg * Math.PI / 180)];
+function poseSide(q) {
+  const H = [q.hx, q.hy], S = vec(H, LEN.T, q.t), Hd = vec(S, LEN.N + LEN.R, q.t);
+  const arm = (ua, fa) => { const E = vec(S, LEN.UA, q.rel ? ua + q.t : ua); return [E, vec(E, LEN.FA, q.rel ? fa + q.t : fa)]; };
+  const leg = (th, sh, ft) => { const K = vec(H, LEN.TH, th), A = vec(K, LEN.SH, sh); return [K, A, vec(A, LEN.FT, ft ?? sh - 90)]; };
+  const [E, W] = arm(q.ua, q.fa), [K, A, F] = leg(q.th, q.sh, q.ft), o = {H, S, Hd, E, W, K, A, F, far: []};
+  if (q.ua2 != null) o.far.push([S, ...arm(q.ua2, q.fa2)]);
+  if (q.th2 != null) o.far.push([H, ...leg(q.th2, q.sh2)]);
+  o.near = [[Hd], [H, S], [S, E, W], [H, K, A, F]];
+  return o;
+}
+function poseFront(q) {
+  const cx = 80, hy = q.hy, ny = hy - 32, sy = ny - (q.up || 0), o = {H: [cx, hy], far: [], near: []};
+  o.near.push([[cx, ny - 10]], [[cx - 10, sy], [cx + 10, sy]], [[cx - 10, sy], [cx - 6, hy], [cx + 6, hy], [cx + 10, sy]]);
+  [1, -1].forEach(s => {
+    const Sh = [cx + 10 * s, sy], r = Math.PI / 180;
+    const E = [Sh[0] + s * LEN.UA * q.ps * Math.sin(q.a * r), Sh[1] + LEN.UA * Math.cos(q.a * r)];
+    const W = [E[0] + s * LEN.FA * Math.sin(q.fa * r), E[1] + LEN.FA * Math.cos(q.fa * r)];
+    const Hp = [cx + 6 * s, hy], K = [Hp[0] + s * LEN.TH * Math.sin(q.l * r), hy + LEN.TH * Math.cos(q.l * r)];
+    const A = [K[0] + s * LEN.SH * Math.sin(q.l2 * r), K[1] + LEN.SH * Math.cos(q.l2 * r)];
+    o.near.push([Sh, E, W], [Hp, K, A, [A[0] + 5 * s, A[1]]]);
+    o[s > 0 ? "W" : "W2"] = W;
+  });
+  return o;
+}
+function drawPose(svg, ph) {
+  const pt = P[svg.dataset.pt], q = {...pt.a};
+  for (const key in pt.b) q[key] = pt.a[key] + (pt.b[key] - pt.a[key]) * ph;
+  const o = pt.m === "f" ? poseFront(q) : poseSide(q);
+  const ln = (pts, col, w) => pts.length === 1 ? `<circle cx="${pts[0][0]}" cy="${pts[0][1]}" r="${LEN.R}" style="fill:var(--card);stroke:${col};stroke-width:${w}"/>`
+    : `<polyline points="${pts.map(p => p.join(",")).join(" ")}" style="fill:none;stroke:${col};stroke-width:${w};stroke-linecap:round;stroke-linejoin:round"/>`;
+  let out = "";
+  pt.pr.forEach(x => {
+    const at = o[x.at || x.to];
+    if (x.t === "line") out += ln([x.p.slice(0, 2), x.p.slice(2)], "var(--mute)", 2);
+    else if (x.t === "rect") out += `<rect x="${x.p[0]}" y="${x.p[1]}" width="${x.p[2]}" height="${x.p[3]}" rx="2" style="fill:var(--line)"/>`;
+    else if (x.t === "cable") out += ln([x.from, at], "var(--mute)", 1.5);
+    else if (x.t === "bar") out += ln(x.v ? [[at[0], at[1] - x.len / 2], [at[0], at[1] + x.len / 2]] : [[at[0] - x.len / 2, at[1]], [at[0] + x.len / 2, at[1]]], "var(--c)", 3);
+    else if (x.t === "db") out += `<rect x="${at[0] - 6}" y="${at[1] - 3}" width="12" height="6" rx="2" style="fill:var(--c)"/>`;
+    else if (x.t === "pad" || x.t === "disc") out += `<circle cx="${at[0]}" cy="${at[1]}" r="${x.r || 4}" style="fill:var(--c)"/>`;
+    else if (x.t === "plate") out += ln([vec(at, x.len / 2, x.ang), vec(at, x.len / 2, x.ang + 180)], "var(--c)", 3);
+  });
+  o.far.forEach(p => out += ln(p, "var(--mute)", 4));
+  o.near.forEach(p => out += ln(p, "var(--ink)", 4));
+  svg.innerHTML = out;
+}
+(function loop(ts) {
+  const ph = (1 - Math.cos(ts / 2600 * 2 * Math.PI)) / 2;
+  document.querySelectorAll("svg[data-pt]").forEach(s => drawPose(s, ph));
+  requestAnimationFrame(loop);
+})(0);
+let openG = null;
+function guideBox(g) {
+  const box = h("div", {class: "guide"});
+  if (g.pt) { const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("viewBox", "0 0 160 112"); svg.dataset.pt = g.pt; svg.setAttribute("role", "img"); svg.setAttribute("aria-label", g.k + " 동작"); box.append(svg); drawPose(svg, 0); }
+  box.append(h("ul", {}, g.cues.map(c => h("li", {}, c))),
+    h("a", {href: "https://www.youtube.com/results?search_query=" + encodeURIComponent(g.k + " 자세"), target: "_blank", rel: "noopener"}, "영상으로 자세 보기 ↗"));
   return box;
 }
 
