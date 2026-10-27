@@ -84,6 +84,29 @@ dialog::backdrop{background:#000a}
 dialog .panel{border:0;position:static}
 @media(min-width:900px){dialog{display:none}}
 @media(max-width:899px){#side{display:none}}
+
+/* A layout (dots) + per-workout colors */
+.cell{background:transparent;border:1px solid transparent;border-top:1px solid transparent;align-items:center;justify-content:center;gap:5px;text-align:center;min-height:56px;padding:4px}
+@media(min-width:900px){.cell{min-height:84px;gap:7px}}
+.cell:hover{background:var(--card);border-color:var(--line);transform:none}
+.cell .n{color:var(--ink);font-size:1.1rem}
+@media(min-width:900px){.cell .n{font-size:1.35rem}}
+.cell .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--c);box-sizing:border-box;background:conic-gradient(var(--c) calc(var(--p,0)*1%),transparent 0)}
+@media(min-width:900px){.cell .dot{width:13px;height:13px}}
+.cell.rest .dot,.cell.none .dot{visibility:hidden}
+.cell.rest .n,.cell.none .n{color:var(--mute)}
+.cell.rest{opacity:1}
+.cell .tg{display:none;font-size:.55rem;font-weight:800;letter-spacing:.12em;color:var(--c);min-height:.8em}
+@media(min-width:900px){.cell .tg{display:block}}
+.cell.done{background:transparent}
+.cell.done .n,.cell.done .t{color:var(--ink)}
+.cell.done::before{content:none}
+.cell.today{border-color:var(--lime);background:#c6ff3d14}
+.cell.today::after{content:none}
+.cell.today .n{color:var(--lime)}
+.cell.sel{background:var(--card2);box-shadow:none;border-color:var(--lime)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:.75rem;color:var(--mute)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 </style>
 </head>
 <body>
@@ -94,11 +117,11 @@ dialog .panel{border:0;position:static}
   </div>
   <div class="stats">
     <div class="stat"><b class="num" id="s1">0</b><span>이번 달 완료</span></div>
-    <div class="stat hot"><b class="num" id="s2">0</b><span>🔥 연속 운동일</span></div>
+    <div class="stat hot"><b class="num" id="s2">0</b><span>🔥 연속일</span></div>
     <div class="stat"><b class="num" id="s3">0%</b><span>이번 달 달성률</span></div>
   </div>
   <div class="wrap">
-    <div><div class="grid" id="grid"></div><p class="hint">날짜를 눌러 운동 체크리스트를 열어요. 기록은 이 기기 브라우저에만 저장돼요.</p></div>
+    <div><div class="grid" id="grid"></div><div class="legend" id="legend"></div><p class="hint">날짜를 눌러 운동 체크리스트를 열어요. 기록은 이 기기 브라우저에만 저장돼요.</p></div>
     <aside id="side"></aside>
   </div>
 </main>
@@ -170,7 +193,8 @@ function render() {
     if (p && p.rest) b.classList.add("rest");
     if (k === today) b.classList.add("today");
     if (k === ymd(sel)) b.classList.add("sel");
-    b.innerHTML = `<span class="n num">${n}</span><span class="t">${p ? p.t : ""}</span><span class="bar"><i style="width:${total ? Math.min(100, c / total * 100) : 0}%"></i></span>`;
+    b.innerHTML = `<span class="n num">${n}</span><span class="dot"></span><span class="tg">${p && !p.rest ? p.tag : ""}</span>`;
+    b.style.setProperty("--p", total ? Math.min(100, c / total * 100) : 0);
     b.onclick = () => { sel = d; render(); if (!wide()) dlg.showModal(); };
     g.append(b);
   }
@@ -203,6 +227,7 @@ function detail(d) {
 }
 
 const dlg = $("dlg");
+$("legend").innerHTML = DAYS.filter(d => !d.rest).map(d => `<span><i style="background:${d.c}"></i>${d.title.split(" ")[0]}</span>`).join("");
 $("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
 $("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
 matchMedia("(min-width:900px)").addEventListener("change", render);
