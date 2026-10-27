@@ -128,6 +128,10 @@ html.lock,html.lock body{overflow:hidden;height:100%}
 dialog{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 dialog{border:0;border-radius:20px;padding:0;width:min(94vw,460px);max-height:92vh;background:var(--card);color:var(--ink);overflow:auto}
 dialog::backdrop{background:#000a}
+.xbar{position:sticky;top:8px;z-index:5;height:0;display:flex;justify-content:flex-end;margin:-4px 0 0}
+.xbar .x{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card2);color:var(--ink);font-size:1rem;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 8px #0003}
+.xbar .x:hover{border-color:var(--lime);color:var(--lime)}
+dialog .panel h2{padding-right:44px}
 dialog .panel{border:0;position:static;max-height:none;overflow:visible}
 @media(min-width:900px){dialog{display:none}}
 @media(max-width:899px){#side{display:none}}
@@ -236,19 +240,19 @@ function planOf(d) {
 const DB = [];
 const add = (g, n, k, p, e) => DB.push({g, n, k, p, e});
 [["슬로우캘리 클래식 참치포케 (현미)", 543, 29], ["슬로우캘리 육회포케 (현미)", 590, 31], ["슬로우캘리 클래식 연어포케 (현미)", 569, 30]].forEach(x => add("slow", ...x, 1));
-[["탄단지 샐러디", 322.9, 17.9], ["그라브락스 연어 포케볼", 535.6, 21.8], ["그라브락스 연어 파스타 누들볼", 346.2, 20], ["닭다리살 MAX 프로틴 박스", 758.7, 43.2], ["[프로틴]바질크림 치킨 샌드위치", 442.8, 23.9], ["고추장제육 들기름파스타 누들볼", 350.7, 17.5], ["고추장제육 간장메밀 누들볼", 412.1, 20.2], ["고추장제육 포케볼", 468.8, 20.2], ["불고기 반미 샌드위치", 578.7, 18.7], ["클래식 치킨 샌드위치", 471.1, 17.5], ["칠리베이컨 곡물랩", 730.4, 21.5], ["멕시칸 랩", 607.4, 19.4], ["칠리베이컨 포케볼", 485.2, 18.7], ["로스트 닭다리살 샐러디", 259.2, 13.2], ["그라브락스 연어 샐러디", 290.3, 20.8], ["우삼겹메밀 누들볼", 406.6, 18], ["타코 쉬림프 랩", 501.1, 15.4], ["치킨 콥 샐러디", 209.1, 23.9], ["단호박 노릇두부 샐러디", 214.6, 6.8], ["타코 쉬림프 샐러디", 192.1, 15.7], ["우삼겹 포케볼", 618.1, 21.2], ["청양간장 두부 비빔밥", 604, 17.8], ["바베큐닭다리살 포케볼", 557.3, 26.6], ["소고기 비빔메밀 누들볼", 398.8, 23.8], ["치킨 MAX 프로틴 파스타", 707.9, 55.1], ["우삼겹 MAX 프로틴 박스", 900.7, 39.4], ["[프로틴]치킨 반미 샌드위치", 484, 22.8], ["스파이시 쉬림프 샌드위치", 463.7, 18.7], ["[프로틴]프레시 잠봉 샌드위치", 493.3, 20], ["[프로틴]비프에그마요 샌드위치", 712.6, 25.5], ["[프로틴]바질 레몬연어 샌드위치", 576.5, 20.8], ["고소우삼겹 곡물랩", 704.7, 24], ["바베큐닭다리살 곡물랩", 717.3, 26.1], ["그라브락스 연어 랩", 475.4, 17.6], ["시저치킨 랩", 500.9, 21.8], ["로스트닭다리살 랩", 549.6, 19.8], ["에그마요 랩", 661.6, 19.4], ["바질치킨 랩", 523.9, 24.2], ["바질크림 잠봉 랩", 462.9, 16.4]].forEach(x => add("salady", ...x));
-[["고추장제육 추가", 92.8, 10.5], ["닭가슴살 추가", 60.8, 12.5], ["에그 추가", 72.5, 6.7], ["그라브락스 연어 추가", 127.2, 14.1], ["로스트닭다리살 추가", 120, 9], ["그라운드비프 추가", 108, 10.2], ["우삼겹 추가", 161.1, 9.3], ["칩베이컨 추가", 66.3, 3], ["두부 추가", 100, 4.2], ["잠봉 슬라이스 추가", 44, 6], ["케이준 쉬림프 추가", 36.9, 8.3], ["에그마요 추가", 110.3, 4.1], ["슈레드치즈 추가", 65, 5], ["견과류 추가", 89.1, 3.1]].forEach(x => add("topping", ...x));
-[["프로틴 쉐이크 1스쿱 (물)", 120, 24], ["바나나 1개", 105, 1], ["아메리카노", 5, 0], ["삶은 계란 1개", 78, 6.3], ["그릭요거트 150g (무가당)", 100, 15], ["닭가슴살 소시지 1개", 110, 15], ["닭가슴살 100g (편의점)", 110, 23], ["단백질 음료 1개", 150, 20], ["두부 150g", 120, 12], ["현미밥 2/3공기", 210, 4.5], ["현미밥 1공기", 310, 6.5]].forEach(x => add("etc", ...x, 1));
+[["칠리베이컨 포케볼", 485.2, 18.7], ["닭가슴살 추가", 60.8, 12.5], ["에그 추가", 72.5, 6.7]].forEach(x => add("salady", ...x));
+[["프로틴 쉐이크 1스쿱 (물)", 120, 24], ["마이프로틴 임팩트 웨이 1스쿱", 103, 21], ["하이뮨 프로틴 밸런스 액티브 250ml", 130, 20], ["하이뮨 프로틴 밸런스 분말 1회분", 145, 20], ["바나나 1개", 105, 1], ["아메리카노", 5, 0], ["삶은 계란 1개", 78, 6.3], ["그릭요거트 150g (무가당)", 100, 15], ["닭가슴살 소시지 1개", 110, 15], ["닭가슴살 100g (편의점)", 110, 23], ["참치캔 1개 (기름 뺀 살코기)", 130, 20], ["단백질 음료 1개", 150, 20], ["두부 150g", 120, 12], ["현미밥 2/3공기", 210, 4.5], ["현미밥 1공기", 310, 6.5]].forEach(x => add("etc", ...x, 1));
+[["맥도날드 더블 쿼터파운더 치즈 (미국 수치)", 740, 48], ["맥도날드 쿼터파운더 치즈", 552, 33], ["서브웨이 로스트 치킨 15cm", 320, 23], ["서브웨이 로스트 치킨 30cm", 640, 46], ["서브웨이 스테이크&치즈 15cm", 355, 28], ["서브웨이 스테이크&치즈 30cm", 710, 56], ["서브웨이 쉬림프 15cm", 241, 16], ["삼계탕 1인분", 900, 60], ["설렁탕·곰탕 1그릇 (밥 포함)", 550, 28], ["소고기 스테이크 200g", 450, 50], ["연어 구이 100g", 200, 20], ["고등어구이 1/2마리", 220, 20]].forEach(x => add("out", ...x, 1));
 [["구내식당 한 끼 (밥·국·반찬)", 700, 25], ["구내식당 + 단백질 반찬 추가", 900, 43]].forEach(x => add("canteen", ...x, 1));
 [["소고기 샤브샤브 + 채소", 550, 45], ["닭가슴살 샐러드 + 현미밥 2/3", 500, 40], ["생선구이 정식 (밥 2/3)", 600, 38], ["순두부찌개 + 계란2 + 밥 2/3", 580, 30], ["소고기 구이 + 쌈 + 밥 1/2", 650, 42], ["연어 스테이크 + 샐러드", 550, 38], ["닭볶음탕(살코기) + 밥 2/3", 650, 40], ["두부·계란·불고기 정식", 600, 42]].forEach(x => add("dinner", ...x, 1));
-const GN = {slow: "슬로우캘리", salady: "샐러디 메뉴", topping: "샐러디 추가 토핑", etc: "프로틴·간식", canteen: "구내식당", dinner: "저녁 메뉴"};
+const GN = {slow: "슬로우캘리", salady: "샐러디 (자주 먹는 것)", etc: "프로틴·간식", out: "외식·패스트푸드", canteen: "구내식당", dinner: "저녁 메뉴"};
 const F = n => DB.find(x => x.n === n);
 const COMBOS = [
   ["슬로우캘리 클래식 참치포케 (현미)"], ["슬로우캘리 육회포케 (현미)"],
-  ["칠리베이컨 포케볼", "닭가슴살 추가", "에그 추가"], ["닭다리살 MAX 프로틴 박스"],
-  ["그라브락스 연어 포케볼", "닭가슴살 추가"], ["우삼겹 포케볼", "에그 추가"],
-  ["바베큐닭다리살 포케볼", "닭가슴살 추가"], ["고추장제육 포케볼", "닭가슴살 추가", "에그 추가"],
-  ["치킨 MAX 프로틴 파스타"], ["청양간장 두부 비빔밥", "닭가슴살 추가"],
+  ["칠리베이컨 포케볼", "닭가슴살 추가", "에그 추가"], ["서브웨이 로스트 치킨 30cm"],
+  ["서브웨이 스테이크&치즈 30cm"], ["맥도날드 더블 쿼터파운더 치즈 (미국 수치)"],
+  ["맥도날드 쿼터파운더 치즈", "그릭요거트 150g (무가당)"], ["삼계탕 1인분"],
+  ["설렁탕·곰탕 1그릇 (밥 포함)", "삶은 계란 1개", "삶은 계란 1개"],
 ];
 const SLOTS = [["pre", "운동 전"], ["post", "운동 직후"], ["lunch", "점심"], ["snack", "간식"], ["dinner", "저녁"]];
 
@@ -304,6 +308,7 @@ function syncDialog() {
   inp.value = token;
   const msg = h("p", {class: "sub"}, syncSt[1] ? `상태: ${syncSt[1]}` : "");
   d.replaceChildren(h("div", {class: "panel", style: "--c:var(--sky)"},
+    xBtn(d),
     h("h2", {class: "big"}, "기기 간 동기화"),
     h("p", {class: "sub"}, "비공개 저장소 workout-data에 기록을 저장해요. 이 저장소만 읽고 쓸 수 있는 토큰을 이 브라우저에 한 번만 붙여넣으면 돼요."),
     inp, msg,
@@ -328,6 +333,7 @@ const lock = on => document.documentElement.classList.toggle("lock", on);
 ["dlg", "sdlg"].forEach(id => { const d = $(id); d.addEventListener("close", () => lock(false)); d.addEventListener("click", e => { if (e.target === d) closeDlg(d); }); });
 const showDlg = d => { d.showModal(); lock(true); };
 const closeDlg = d => { d.close(); lock(false); };
+const xBtn = d => h("div", {class: "xbar"}, h("button", {class: "x", type: "button", "aria-label": "닫기", onclick: () => closeDlg(d)}, "✕"));
 
 function streak() {
   let n = 0;
@@ -373,6 +379,7 @@ function panel(d) {
   const p = planOf(d), k = ymd(d), el = h("div", {class: "panel"});
   if (!p) return el.append(h("h2", {class: "big"}, `${d.getMonth()+1}/${d.getDate()}`), h("p", {class: "sub"}, "운동 시작 전이에요 (첫 운동일 10/21)")), el;
   el.style.setProperty("--c", p.c);
+  if (!wide()) el.append(xBtn(dlg));
   el.append(h("span", {class: "tag"}, p.tag), h("h2", {class: "big"}, `${d.getMonth()+1}/${d.getDate()} ${p.title}`), h("p", {class: "sub"}, `${p.week}주차${p.sub ? " · " + p.sub : ""}`));
   const tb = h("div", {class: "tabs"});
   [["w", "운동"], ["d", "식단"]].forEach(([id, t]) => tb.append(h("button", {class: tab === id ? "on" : "", type: "button", onclick: () => { tab = id; pick = null; render(); }}, t)));
@@ -421,7 +428,7 @@ function dietTab(d, k) {
   const rec = h("div", {class: "rec"});
   if (!canteen) {
     const dayNo = Math.floor(d / 864e5), n = COMBOS.length, pickIdx = [0, 1, 2].map(j => (dayNo * 3 + j) % n);
-    rec.append(h("h4", {}, "오늘 점심 추천 (슬로우캘리 · 샐러디)"));
+    rec.append(h("h4", {}, "오늘 점심 추천 (슬로우캘리 · 샐러디 · 서브웨이 등)"));
     pickIdx.forEach(i => {
       const fs = COMBOS[i].map(F), s = fs.reduce((a, f) => ({k: a.k + f.k, p: a.p + f.p}), {k: 0, p: 0});
       rec.append(h("div", {class: "opt"}, h("div", {}, fs.map(f => f.n).join(" + "), h("span", {class: "m"}, `${r1(s.k)}kcal · 단백질 ${s.p.toFixed(1)}g${fs.some(f => f.e) ? " (추정)" : ""}`)),
@@ -433,7 +440,7 @@ function dietTab(d, k) {
   }
   el.append(rec);
 
-  const dn = DB.filter(x => x.g === "dinner").sort((a, b) => Math.abs(a.p - Math.max(left, 20)) - Math.abs(b.p - Math.max(left, 20))).slice(0, 3);
+  const dn = DB.filter(x => x.g === "dinner" || x.g === "out").sort((a, b) => Math.abs(a.p - Math.max(left, 20)) - Math.abs(b.p - Math.max(left, 20))).slice(0, 3);
   const rd = h("div", {class: "rec"}, h("h4", {}, left > 0 ? `저녁 추천 (남은 단백질 ${r1(left)}g 기준)` : "저녁 추천"));
   dn.forEach(f => rd.append(h("div", {class: "opt"}, h("div", {}, f.n, h("span", {class: "m"}, `${f.k}kcal · 단백질 ${f.p}g (추정)`)), h("button", {class: "btn sm", type: "button", onclick: () => { log(k, "dinner", f); render(); }}, "기록"))));
   el.append(rd);
