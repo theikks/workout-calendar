@@ -9,107 +9,116 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0d10;--card:#14181d;--card2:#1b2027;--ink:#f2f4f7;--mute:#8a94a3;--line:#242a33;--lime:#c6ff3d;--ink-on-lime:#0b0d10}
+:root{--bg:#0b0d10;--card:#14181d;--card2:#1b2027;--ink:#f2f4f7;--mute:#8a94a3;--line:#242a33;--lime:#c6ff3d;--pink:#ff2e97;--sky:#38bdf8}
 *{box-sizing:border-box}
 html{font-size:16px}
 @media(min-width:900px){html{font-size:18px}}
 body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#1c2a10 0,transparent 60%),var(--bg);color:var(--ink);font:1rem/1.5 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;min-height:100vh}
 .num,h1,.big{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;font-style:italic;font-weight:800;letter-spacing:.01em}
+button{font:inherit;color:inherit}
 main{max-width:1120px;margin:0 auto;padding:16px}
 @media(min-width:900px){main{padding:32px}}
 
-/* top */
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand small{display:block;color:var(--lime);font-size:.75rem;letter-spacing:.25em;font-weight:700}
 h1{margin:0;font-size:2.4rem;line-height:1;text-transform:uppercase}
 h1 span{color:var(--lime)}
 .nav{display:flex;gap:8px;align-items:center}
 .nav .m{font-family:"Barlow Condensed",sans-serif;font-style:italic;font-weight:800;font-size:1.6rem;min-width:4.5em;text-align:center}
-.nav button{background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:12px;width:44px;height:44px;font-size:1.3rem;cursor:pointer}
+.nav button{background:var(--card2);border:1px solid var(--line);border-radius:12px;width:44px;height:44px;font-size:1.3rem;cursor:pointer}
 .nav button:hover{border-color:var(--lime);color:var(--lime)}
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0}
+@media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
 .stat b{display:block;font-size:2rem;line-height:1.1}
 .stat span{color:var(--mute);font-size:.8rem}
 .stat.hot b{color:var(--lime)}
+.stat.sky b{color:var(--sky)}
 
-/* layout */
 .wrap{display:grid;gap:18px}
-@media(min-width:900px){.wrap{grid-template-columns:1fr 340px;align-items:start}}
+@media(min-width:900px){.wrap{grid-template-columns:1fr 380px;align-items:start}}
 
-/* calendar */
 .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
 @media(min-width:900px){.grid{gap:8px}}
 .dow{text-align:center;color:var(--mute);font-size:.8rem;font-weight:700;letter-spacing:.1em;padding:4px 0}
-.cell{--c:#64748b;position:relative;min-width:0;min-height:64px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:12px;padding:5px 6px;display:flex;flex-direction:column;justify-content:space-between;color:var(--ink);font:inherit;text-align:left;cursor:pointer;overflow:hidden;transition:transform .12s,border-color .12s}
-@media(min-width:900px){.cell{min-height:96px;padding:8px 10px;border-radius:14px}}
-.cell:hover{transform:translateY(-2px);border-color:var(--c)}
-.cell.empty{background:transparent;border:0;cursor:default;pointer-events:none}
-.cell .n{font-size:1.15rem;line-height:1;color:var(--mute)}
-.cell .t{font-size:1.1rem;line-height:1}
-@media(min-width:900px){.cell .n{font-size:1.4rem}.cell .t{font-size:1.4rem}}
-.cell .bar{height:4px;border-radius:2px;background:#ffffff14;overflow:hidden}
-.cell .bar i{display:block;height:100%;background:var(--c)}
-.cell.rest{opacity:.55}
-.cell.none{border-top-color:transparent}
-.cell.sel{border-color:var(--lime);box-shadow:0 0 0 1px var(--lime)}
-.cell.today .n{color:var(--lime)}
-.cell.today::after{content:"TODAY";position:absolute;top:6px;right:6px;font-size:.5rem;font-weight:800;letter-spacing:.12em;color:var(--lime)}
-@media(max-width:899px){.cell.today::after{display:none}.cell.today{border-color:var(--lime)}}
-.cell.done{background:var(--c)}
-.cell.done .n,.cell.done .t{color:#0b0d10}
-.cell.done .bar{background:#0b0d1030}.cell.done .bar i{background:#0b0d10}
-.cell.done::before{content:"✓";position:absolute;right:8px;bottom:12px;font-size:1.3rem;font-weight:900;color:#0b0d10}
-
-/* detail */
-.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
-@media(min-width:900px){.panel{position:sticky;top:24px}}
-.panel .tag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.15em;padding:3px 10px;border-radius:99px;background:var(--c);color:#0b0d10}
-.panel h2{margin:8px 0 2px;font-size:1.7rem;line-height:1.1}
-.panel p{margin:0 0 12px;color:var(--mute);font-size:.85rem}
-.pbar{height:8px;border-radius:4px;background:#ffffff14;overflow:hidden;margin:6px 0 10px}
-.pbar i{display:block;height:100%;background:var(--c);transition:width .25s}
-label.item{display:flex;gap:12px;align-items:flex-start;padding:11px 4px;border-top:1px solid var(--line);cursor:pointer}
-label.item input{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;border:2px solid #4a5463;border-radius:8px;margin-top:1px;display:grid;place-items:center;cursor:pointer;background:transparent}
-label.item input:checked{background:var(--c);border-color:var(--c)}
-label.item input:checked::after{content:"✓";color:#0b0d10;font-weight:900;font-size:.9rem}
-label.item input:checked+span{color:var(--mute);text-decoration:line-through}
-.row{display:flex;gap:8px;margin-top:14px}
-.row button{flex:1;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
-.row .pri{background:var(--lime);border-color:var(--lime);color:var(--ink-on-lime)}
-.hint{color:var(--mute);font-size:.8rem;margin-top:16px}
-dialog{border:0;border-radius:20px;padding:0;width:min(94vw,440px);background:var(--card);color:var(--ink)}
-dialog::backdrop{background:#000a}
-dialog .panel{border:0;position:static}
-@media(min-width:900px){dialog{display:none}}
-@media(max-width:899px){#side{display:none}}
-
-/* A layout (dots) + per-workout colors */
-.cell{background:transparent;border:1px solid transparent;border-top:1px solid transparent;align-items:center;justify-content:center;gap:5px;text-align:center;min-height:56px;padding:4px}
-@media(min-width:900px){.cell{min-height:84px;gap:7px}}
-.cell:hover{background:var(--card);border-color:var(--line);transform:none}
-.cell .n{color:var(--ink);font-size:1.1rem}
+.cell{--c:#64748b;position:relative;min-width:0;min-height:62px;background:transparent;border:1px solid transparent;border-radius:12px;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--ink);text-align:center;cursor:pointer;overflow:hidden}
+@media(min-width:900px){.cell{min-height:88px;gap:6px;border-radius:14px}}
+.cell:hover{background:var(--card);border-color:var(--line)}
+.cell.empty{border:0;cursor:default;pointer-events:none}
+.cell .n{font-size:1.1rem;line-height:1}
 @media(min-width:900px){.cell .n{font-size:1.35rem}}
 .cell .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--c);box-sizing:border-box;background:conic-gradient(var(--c) calc(var(--p,0)*1%),transparent 0)}
 @media(min-width:900px){.cell .dot{width:13px;height:13px}}
 .cell.rest .dot,.cell.none .dot{visibility:hidden}
 .cell.rest .n,.cell.none .n{color:var(--mute)}
-.cell.rest{opacity:1}
 .cell .tg{display:none;font-size:.55rem;font-weight:800;letter-spacing:.12em;color:var(--c);min-height:.8em}
 @media(min-width:900px){.cell .tg{display:block}}
-.cell.done{background:transparent}
-.cell.done .n,.cell.done .t{color:var(--ink)}
-.cell.done::before{content:none}
-.cell.today{border-color:var(--lime);background:#c6ff3d14}
-.cell.today::after{content:none}
-.cell.today .n{color:var(--lime)}
-.cell.sel{background:var(--card2);box-shadow:none;border-color:var(--lime)}
+.cell .dg{width:60%;height:3px;border-radius:2px;background:#ffffff14;overflow:hidden}
+.cell .dg i{display:block;height:100%;background:var(--sky);width:var(--d,0%)}
+.cell.today{border-color:var(--pink);background:#ff2e9714;box-shadow:0 0 0 1px #ff2e9766,0 0 12px #ff2e9755}
+.cell.today .n{color:var(--pink)}
+.cell.sel:not(.today){border-color:var(--line);background:var(--card2)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:.75rem;color:var(--mute)}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
-.cell.today{border-color:#ff2e97;background:#ff2e9714;box-shadow:0 0 0 1px #ff2e9766,0 0 12px #ff2e9755;outline:0}
-.cell.today .n{color:#ff2e97}
-.cell.sel:not(.today){border-color:var(--line);background:var(--card2)}
+.legend i.bar{width:14px;height:4px;border-radius:2px;vertical-align:2px}
+.hint{color:var(--mute);font-size:.8rem;margin-top:12px}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px}
+@media(min-width:900px){.panel{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto}}
+.tag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.15em;padding:3px 10px;border-radius:99px;background:var(--c,#64748b);color:#0b0d10}
+.panel h2{margin:8px 0 2px;font-size:1.6rem;line-height:1.1}
+.panel .sub{margin:0 0 10px;color:var(--mute);font-size:.82rem}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 12px;background:var(--bg);padding:4px;border-radius:12px}
+.tabs button{border:0;background:transparent;padding:9px;border-radius:9px;font-weight:700;cursor:pointer;color:var(--mute)}
+.tabs button.on{background:var(--card2);color:var(--ink)}
+.pbar{height:8px;border-radius:4px;background:#ffffff14;overflow:hidden;margin:4px 0 6px}
+.pbar i{display:block;height:100%;background:var(--c,var(--lime));transition:width .25s}
+.sec{margin:14px 0 2px;font-size:.78rem;font-weight:800;letter-spacing:.06em;color:var(--c,var(--lime))}
+.sec small{color:var(--mute);font-weight:400;letter-spacing:0;margin-left:6px}
+label.item{display:flex;gap:12px;align-items:flex-start;padding:9px 2px;border-top:1px solid var(--line);cursor:pointer;font-size:.92rem}
+label.item input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border:2px solid #4a5463;border-radius:7px;margin-top:1px;display:grid;place-items:center;cursor:pointer;background:transparent}
+label.item input:checked{background:var(--c,var(--lime));border-color:var(--c,var(--lime))}
+label.item input:checked::after{content:"✓";color:#0b0d10;font-weight:900;font-size:.85rem}
+label.item input:checked+span{color:var(--mute);text-decoration:line-through}
+.row{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-weight:700;cursor:pointer}
+.btn.pri{background:var(--lime);border-color:var(--lime);color:#0b0d10}
+.btn.sm{flex:none;padding:6px 12px;font-size:.8rem;border-radius:9px}
+
+/* diet */
+.macro{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.macro div{background:var(--bg);border-radius:12px;padding:10px 12px}
+.macro b{font-size:1.6rem;line-height:1}
+.macro small{color:var(--mute);font-size:.75rem;display:block}
+.macro .p{--c:var(--sky)}
+.macro .k{--c:var(--lime)}
+.slot{margin-top:12px;border-top:1px solid var(--line);padding-top:8px}
+.slot h3{margin:0;font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+.ent{display:flex;justify-content:space-between;gap:8px;padding:6px 0;font-size:.88rem}
+.ent .m{color:var(--mute);font-size:.75rem;white-space:nowrap}
+.ent button{background:none;border:0;color:var(--mute);cursor:pointer;padding:0 4px}
+.est{font-size:.62rem;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.rec{background:var(--bg);border-radius:14px;padding:12px;margin-top:14px}
+.rec h4{margin:0 0 6px;font-size:.85rem}
+.rec .opt{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:.86rem}
+.rec .opt span.m{display:block;color:var(--mute);font-size:.75rem}
+.rec p{margin:0 0 4px;color:var(--mute);font-size:.8rem}
+.pick{background:var(--bg);border-radius:12px;padding:10px;margin:8px 0}
+.pick input[type=search],.pick input[type=text],.pick input[type=number]{width:100%;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px;color:var(--ink);font:inherit;font-size:.9rem}
+.pick .list{max-height:240px;overflow:auto;margin-top:8px}
+.pick .g{font-size:.7rem;font-weight:800;color:var(--lime);margin:8px 0 2px;letter-spacing:.06em}
+.pick .f{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:8px 2px;cursor:pointer;font-size:.86rem}
+.pick .f:hover{background:var(--card)}
+.pick .f .m{color:var(--mute);font-size:.75rem;white-space:nowrap}
+.pick .cu{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:6px;margin-top:8px}
+.water{margin-top:14px}
+
+dialog{border:0;border-radius:20px;padding:0;width:min(94vw,460px);max-height:92vh;background:var(--card);color:var(--ink);overflow:auto}
+dialog::backdrop{background:#000a}
+dialog .panel{border:0;position:static;max-height:none;overflow:visible}
+@media(min-width:900px){dialog{display:none}}
+@media(max-width:899px){#side{display:none}}
 </style>
 </head>
 <body>
@@ -119,62 +128,129 @@ dialog .panel{border:0;position:static}
     <div class="nav"><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
   </div>
   <div class="stats">
-    <div class="stat"><b class="num" id="s1">0</b><span>이번 달 완료</span></div>
+    <div class="stat"><b class="num" id="s1">0</b><span>이번 달 운동 완료</span></div>
     <div class="stat hot"><b class="num" id="s2">0</b><span>🔥 연속일</span></div>
     <div class="stat"><b class="num" id="s3">0%</b><span>이번 달 달성률</span></div>
+    <div class="stat sky"><b class="num" id="s4">-</b><span>평균 단백질(g/일)</span></div>
   </div>
   <div class="wrap">
-    <div><div class="grid" id="grid"></div><div class="legend" id="legend"></div><p class="hint">날짜를 눌러 운동 체크리스트를 열어요. 기록은 이 기기 브라우저에만 저장돼요.</p></div>
+    <div><div class="grid" id="grid"></div>
+      <div class="legend" id="legend"></div>
+      <p class="hint">날짜를 눌러 운동·식단을 체크하세요. 기록은 이 기기 브라우저에만 저장돼요.</p></div>
     <aside id="side"></aside>
   </div>
 </main>
 <dialog id="dlg"></dialog>
 <script>
-// 1주차 월요일. 첫 운동일은 2026-10-21(수)
-const START = new Date(2026, 9, 19), FIRST = new Date(2026, 9, 21);
-const CARDIO = "🚴 유산소 15분 (자전거/인클라인, 러닝X)";
-const STAIRS = "🪜 천국의계단 10분 (Lv4~6, 손잡이 기대지X)";
-const DAYS = [
-  {c: "#3b82f6", tag: "BACK", t: "💪", title: "등 + 이두", w: true, items: [CARDIO, "랫풀다운", "시티드 케이블로우", "원암 덤벨로우", "스트레이트암 풀다운", "백익스텐션", "덤벨컬", STAIRS]},
-  {c: "#a855f7", tag: "SHOULDER", t: "🏋️", title: "어깨 + 코어", w: true, items: [CARDIO, "앉아서 숄더프레스", "사이드 레터럴레이즈", "리어델트 플라이", "페이스풀", "덤벨 슈러그", "데드버그 3x10 / 플랭크 3x40초", STAIRS]},
-  {c: "#f97316", tag: "CHEST", t: "🔥", title: "가슴 + 삼두", w: true, items: [CARDIO, "체스트프레스 / 덤벨벤치 (무게 욕심X)", "인클라인 덤벨프레스", "펙덱 플라이", "케이블 푸시다운", "오버헤드 케이블 익스텐션", STAIRS]},
-  {c: "#22c55e", tag: "LEGS", t: "🦵", title: "하체 (무릎 재활)", w: true, items: ["🚴 자전거 15분 + 클램쉘·브릿지 2x15", "한다리 레그프레스 (왼쪽 먼저, 90°까지)", "양발 레그프레스 (발 높게, 90°)", "덤벨 RDL", "힙쓰러스트", "레그컬", "레그익스텐션 가볍게", "어브덕션/어덕션 2x15", "카프레이즈", "🪜 천국의계단 5분 or 자전거"]},
-  {c: "#eab308", tag: "FREE", t: "🎯", title: "자유운동 (약점보완)", free: true, items: ["🚴 자전거 or 인클라인 걷기 20분"]},
-  {c: "#64748b", tag: "REST", t: "😴", title: "휴식", rest: true, items: []},
-  {c: "#c6ff3d", tag: "TENNIS", t: "🎾", title: "테니스 9시", items: ["🔥 8:30 워밍업 10분 (발목·무릎 돌리기, 제자리 스텝)", "테니스 (급정지·방향전환 때 왼무릎 주의)", "스트레칭 (허벅지·종아리)"]},
-];
+const h = (t, a = {}, ...c) => { const e = document.createElement(t); for (const k in a) { if (k === "class") e.className = a[k]; else if (k === "style") e.style.cssText = a[k]; else if (k.startsWith("on")) e[k] = a[k]; else e.setAttribute(k, a[k]); } c.flat().forEach(x => e.append(x instanceof Node ? x : document.createTextNode(x ?? ""))); return e; };
+const $ = id => document.getElementById(id);
+const r1 = n => Math.round(n);
+
+/* ---------- 일정 ---------- */
+// 1주차 월요일. 첫 운동일 2026-10-21(수). 구내식당은 12/21부터
+const START = new Date(2026, 9, 19), FIRST = new Date(2026, 9, 21), CANTEEN = new Date(2026, 11, 21);
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+const ROLL = {
+  0: ["등 위쪽(흉추)", "광배 (양쪽)", "엉덩이 (양쪽)", "허벅지 앞 (양쪽)", "허벅지 뒤 (양쪽)", "종아리 (양쪽)"],
+  1: ["등 위쪽(흉추)", "광배 (양쪽)", "가슴 옆 (벽에 대고)", "엉덩이 (양쪽)", "허벅지 앞 (양쪽)", "종아리 (양쪽)"],
+  2: ["등 위쪽(흉추)", "가슴 옆 (벽에 대고)", "광배 (양쪽)", "엉덩이 (양쪽)", "허벅지 뒤 (양쪽)", "종아리 (양쪽)"],
+  3: ["엉덩이 (양쪽)", "허벅지 앞 (양쪽)", "허벅지 뒤 (양쪽)", "종아리 (양쪽)", "등 위쪽(흉추)"],
+};
+// [이름, 반복, 세트(생략 시 주차별 3~4세트)]
+const W = {
+  0: [["랫풀다운", "10~12회"], ["시티드 케이블 로우", "12회"], ["원암 덤벨 로우 (한쪽씩)", "12회"], ["스트레이트암 풀다운", "15회"], ["덤벨 컬", "12회"], ["백익스텐션", "15회", 2]],
+  1: [["앉아서 숄더프레스", "10~12회"], ["사이드 레터럴 레이즈", "15회"], ["리어델트 플라이", "15회"], ["덤벨 슈러그", "12회"], ["데드버그", "10회"], ["플랭크", "40초"]],
+  2: [["체스트프레스", "10~12회"], ["인클라인 덤벨 프레스", "10~12회"], ["펙덱 플라이", "12~15회"], ["케이블 푸시다운", "12~15회"], ["오버헤드 케이블 익스텐션", "12회", 2], ["케이블 크런치", "15회"]],
+  3: [["한다리 레그프레스 (왼쪽 먼저, 90°까지)", "12회"], ["덤벨 루마니안 데드리프트", "10~12회"], ["힙쓰러스트", "12회"], ["레그컬", "12회"], ["레그익스텐션 (가볍게, 끝에서 1초)", "15회"], ["케이블 TKE (왼쪽 먼저, 무릎 끝까지 펴기)", "15회"], ["힙 어브덕션 + 어덕션", "각 15회", 2], ["카프레이즈", "15회"]],
+};
 const FREE = [
   ["전신 서킷 3바퀴", "고블릿 박스스쿼트", "덤벨로우", "푸시업", "데드버그", "플랭크"],
-  ["하체 균형", "한발서기 30초x3", "힙쓰러스트", "클램쉘", "카프레이즈", "코어"],
+  ["하체 균형", "한발서기 30초×3", "힙쓰러스트", "클램쉘", "카프레이즈", "코어"],
   ["상체 약점", "인클라인 푸시업", "페이스풀", "사이드레이즈", "케이블 크런치", "걷기 30분"],
 ];
-const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const TYPE = [
+  {c: "#3b82f6", tag: "BACK", title: "등 + 이두"},
+  {c: "#a855f7", tag: "SHOULDER", title: "어깨 + 코어"},
+  {c: "#f97316", tag: "CHEST", title: "가슴 + 삼두"},
+  {c: "#22c55e", tag: "LEGS", title: "하체 (무릎 재활)"},
+  {c: "#eab308", tag: "FREE", title: "자유운동 (약점보완)"},
+  {c: "#64748b", tag: "REST", title: "휴식", rest: true},
+  {c: "#c6ff3d", tag: "TENNIS", title: "테니스 9시"},
+];
+
 function planOf(d) {
   if (d < FIRST) return null;
-  const dow = (d.getDay() + 6) % 7, week = Math.floor((d - START) / 6048e5) + 1, p = DAYS[dow];
-  let items = p.items, sub = "";
-  if (p.w) sub = week <= 4 ? "3세트×12~15회 (2~3개 여유), 휴식 60~90초" : "4세트×8~12회, 상한 채우면 무게 +2.5~5%";
-  if (p.free) { const f = FREE[(week - 1) % 3]; sub = f[0]; items = [...items, ...f.slice(1)]; }
-  return {...p, items, sub, week};
+  const dow = (d.getDay() + 6) % 7, week = Math.floor((d - START) / 6048e5) + 1, T = TYPE[dow];
+  const S = week <= 4 ? 3 : 4, groups = [];
+  let sub = "";
+  if (dow <= 3) {
+    const leg = dow === 3;
+    sub = `세트 ${S}×(위 반복수) · 휴식 60~90초 · 종목마다 첫 세트는 가볍게`;
+    groups.push({h: "폼롤러", note: "8분 · 부위당 30~40초, 무릎뼈 위는 피하기", items: ROLL[dow].map(x => x)});
+    groups.push({h: "유산소", note: "30분 · 심박 130~145 목표", items: [
+      "워밍업 1분 30초 · 4.5km/h · 경사 2%",
+      "전환 30초 · 4.4km/h · 경사 6.5%",
+      leg ? "메인 26분 · 4.3km/h · 경사 6~8% (하체날은 낮게)" : "메인 26분 · 4.3km/h · 경사 10%",
+      "마무리 2분 · 빠르게 걷기 5.5km/h · 경사 3% (힘들면 4.5)",
+    ]});
+    groups.push({h: "웨이트", note: "40분", items: W[dow].map(([n, r, s]) => `${n} · ${s || S}세트 × ${r}`)});
+    groups.push({h: "천국의 계단", note: leg ? "5분 · 발바닥 전체, 무릎 잠그지 않기" : "10분 · 발바닥 전체, 무릎 잠그지 않기", items: leg
+      ? ["워밍업 1분 · 속도 3", "세트 3분 · 속도 5", "쿨다운 1분 · 속도 3"]
+      : ["워밍업 2분 · 속도 3", "세트1 3분 · 속도 5", "세트2 2분 · 속도 6", "세트3 2분 · 속도 5", "쿨다운 1분 · 속도 3"]});
+  } else if (dow === 4) {
+    const f = FREE[(week - 1) % 3]; sub = `이번 주 루틴: ${f[0]}`;
+    groups.push({h: "유산소", note: "20분", items: ["자전거 or 인클라인 걷기 20분"]});
+    groups.push({h: "자유운동", note: f[0], items: f.slice(1)});
+  } else if (dow === 6) {
+    sub = "급정지·방향전환 때 왼무릎 주의, 무릎 시큰하면 중단";
+    groups.push({h: "테니스", note: "9시", items: ["8:30 워밍업 10분 (발목·무릎 돌리기, 제자리 스텝)", "테니스", "스트레칭 (허벅지·종아리)"]});
+  }
+  const items = groups.flatMap(g => g.items);
+  return {...T, groups, items, sub, week};
 }
-let store = {};
-try { store = JSON.parse(localStorage.getItem("workout-checks") || "{}"); } catch (e) {}
-const save = () => { try { localStorage.setItem("workout-checks", JSON.stringify(store)); } catch (e) {} };
+
+/* ---------- 식단 DB (kcal, 단백질g). e=1: 추정치 ---------- */
+const DB = [];
+const add = (g, n, k, p, e) => DB.push({g, n, k, p, e});
+[["슬로우캘리 클래식 참치포케 (현미)", 543, 29], ["슬로우캘리 육회포케 (현미)", 590, 31], ["슬로우캘리 클래식 연어포케 (현미)", 569, 30]].forEach(x => add("slow", ...x, 1));
+[["탄단지 샐러디", 322.9, 17.9], ["그라브락스 연어 포케볼", 535.6, 21.8], ["그라브락스 연어 파스타 누들볼", 346.2, 20], ["닭다리살 MAX 프로틴 박스", 758.7, 43.2], ["[프로틴]바질크림 치킨 샌드위치", 442.8, 23.9], ["고추장제육 들기름파스타 누들볼", 350.7, 17.5], ["고추장제육 간장메밀 누들볼", 412.1, 20.2], ["고추장제육 포케볼", 468.8, 20.2], ["불고기 반미 샌드위치", 578.7, 18.7], ["클래식 치킨 샌드위치", 471.1, 17.5], ["칠리베이컨 곡물랩", 730.4, 21.5], ["멕시칸 랩", 607.4, 19.4], ["칠리베이컨 포케볼", 485.2, 18.7], ["로스트 닭다리살 샐러디", 259.2, 13.2], ["그라브락스 연어 샐러디", 290.3, 20.8], ["우삼겹메밀 누들볼", 406.6, 18], ["타코 쉬림프 랩", 501.1, 15.4], ["치킨 콥 샐러디", 209.1, 23.9], ["단호박 노릇두부 샐러디", 214.6, 6.8], ["타코 쉬림프 샐러디", 192.1, 15.7], ["우삼겹 포케볼", 618.1, 21.2], ["청양간장 두부 비빔밥", 604, 17.8], ["바베큐닭다리살 포케볼", 557.3, 26.6], ["소고기 비빔메밀 누들볼", 398.8, 23.8], ["치킨 MAX 프로틴 파스타", 707.9, 55.1], ["우삼겹 MAX 프로틴 박스", 900.7, 39.4], ["[프로틴]치킨 반미 샌드위치", 484, 22.8], ["스파이시 쉬림프 샌드위치", 463.7, 18.7], ["[프로틴]프레시 잠봉 샌드위치", 493.3, 20], ["[프로틴]비프에그마요 샌드위치", 712.6, 25.5], ["[프로틴]바질 레몬연어 샌드위치", 576.5, 20.8], ["고소우삼겹 곡물랩", 704.7, 24], ["바베큐닭다리살 곡물랩", 717.3, 26.1], ["그라브락스 연어 랩", 475.4, 17.6], ["시저치킨 랩", 500.9, 21.8], ["로스트닭다리살 랩", 549.6, 19.8], ["에그마요 랩", 661.6, 19.4], ["바질치킨 랩", 523.9, 24.2], ["바질크림 잠봉 랩", 462.9, 16.4]].forEach(x => add("salady", ...x));
+[["고추장제육 추가", 92.8, 10.5], ["닭가슴살 추가", 60.8, 12.5], ["에그 추가", 72.5, 6.7], ["그라브락스 연어 추가", 127.2, 14.1], ["로스트닭다리살 추가", 120, 9], ["그라운드비프 추가", 108, 10.2], ["우삼겹 추가", 161.1, 9.3], ["칩베이컨 추가", 66.3, 3], ["두부 추가", 100, 4.2], ["잠봉 슬라이스 추가", 44, 6], ["케이준 쉬림프 추가", 36.9, 8.3], ["에그마요 추가", 110.3, 4.1], ["슈레드치즈 추가", 65, 5], ["견과류 추가", 89.1, 3.1]].forEach(x => add("topping", ...x));
+[["프로틴 쉐이크 1스쿱 (물)", 120, 24], ["바나나 1개", 105, 1], ["아메리카노", 5, 0], ["삶은 계란 1개", 78, 6.3], ["그릭요거트 150g (무가당)", 100, 15], ["닭가슴살 소시지 1개", 110, 15], ["닭가슴살 100g (편의점)", 110, 23], ["단백질 음료 1개", 150, 20], ["두부 150g", 120, 12], ["현미밥 2/3공기", 210, 4.5], ["현미밥 1공기", 310, 6.5]].forEach(x => add("etc", ...x, 1));
+[["구내식당 한 끼 (밥·국·반찬)", 700, 25], ["구내식당 + 단백질 반찬 추가", 900, 43]].forEach(x => add("canteen", ...x, 1));
+[["소고기 샤브샤브 + 채소", 550, 45], ["닭가슴살 샐러드 + 현미밥 2/3", 500, 40], ["생선구이 정식 (밥 2/3)", 600, 38], ["순두부찌개 + 계란2 + 밥 2/3", 580, 30], ["소고기 구이 + 쌈 + 밥 1/2", 650, 42], ["연어 스테이크 + 샐러드", 550, 38], ["닭볶음탕(살코기) + 밥 2/3", 650, 40], ["두부·계란·불고기 정식", 600, 42]].forEach(x => add("dinner", ...x, 1));
+const GN = {slow: "슬로우캘리", salady: "샐러디 메뉴", topping: "샐러디 추가 토핑", etc: "프로틴·간식", canteen: "구내식당", dinner: "저녁 메뉴"};
+const F = n => DB.find(x => x.n === n);
+const COMBOS = [
+  ["슬로우캘리 클래식 참치포케 (현미)"], ["슬로우캘리 육회포케 (현미)"],
+  ["칠리베이컨 포케볼", "닭가슴살 추가", "에그 추가"], ["닭다리살 MAX 프로틴 박스"],
+  ["그라브락스 연어 포케볼", "닭가슴살 추가"], ["우삼겹 포케볼", "에그 추가"],
+  ["바베큐닭다리살 포케볼", "닭가슴살 추가"], ["고추장제육 포케볼", "닭가슴살 추가", "에그 추가"],
+  ["치킨 MAX 프로틴 파스타"], ["청양간장 두부 비빔밥", "닭가슴살 추가"],
+];
+const SLOTS = [["pre", "운동 전"], ["post", "운동 직후"], ["lunch", "점심"], ["snack", "간식"], ["dinner", "저녁"]];
+
+/* ---------- 저장 ---------- */
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+let store = load("wk2", {}), diet = load("workout-diet", {}), goal = load("workout-goal", {p: 160, k: 2000});
+const persist = () => { try { localStorage.setItem("wk2", JSON.stringify(store)); localStorage.setItem("workout-diet", JSON.stringify(diet)); localStorage.setItem("workout-goal", JSON.stringify(goal)); } catch (e) {} };
 const checked = k => store[k] || [];
 const isDone = (k, p) => p && !p.rest && p.items.length && checked(k).length >= p.items.length;
+const dd = k => diet[k] || (diet[k] = {items: [], water: false});
+const tot = k => (diet[k]?.items || []).reduce((a, x) => ({k: a.k + x.k * x.q, p: a.p + x.p * x.q}), {k: 0, p: 0});
 
-const $ = id => document.getElementById(id);
+/* ---------- 상태 ---------- */
 const wide = () => matchMedia("(min-width:900px)").matches;
 let view = new Date(); view.setDate(1);
-let sel = new Date();
+let sel = new Date(), tab = "w", pick = null;
+const dlg = $("dlg");
 
 function streak() {
   let n = 0;
   for (let i = 0, d = new Date(); i < 150; i++, d.setDate(d.getDate() - 1)) {
     const p = planOf(d); if (!p) break;
     if (p.rest) continue;
-    if (isDone(ymd(d), p)) n++;
-    else if (i > 0) break;
+    if (isDone(ymd(d), p)) n++; else if (i > 0) break;
   }
   return n;
 }
@@ -182,55 +258,134 @@ function streak() {
 function render() {
   const y = view.getFullYear(), m = view.getMonth(), g = $("grid");
   $("title").textContent = `${y}.${String(m + 1).padStart(2, "0")}`;
-  g.replaceChildren();
-  "월화수목금토일".split("").forEach(c => { const e = document.createElement("div"); e.className = "dow"; e.textContent = c; g.append(e); });
+  g.replaceChildren(..."월화수목금토일".split("").map(c => h("div", {class: "dow"}, c)));
   const lead = (new Date(y, m, 1).getDay() + 6) % 7, last = new Date(y, m + 1, 0).getDate(), today = ymd(new Date());
-  for (let i = 0; i < lead; i++) { const e = document.createElement("div"); e.className = "cell empty"; g.append(e); }
-  let planned = 0, done = 0;
+  for (let i = 0; i < lead; i++) g.append(h("div", {class: "cell empty"}));
+  let planned = 0, done = 0, psum = 0, pdays = 0;
   for (let n = 1; n <= last; n++) {
-    const d = new Date(y, m, n), k = ymd(d), p = planOf(d), b = document.createElement("button");
-    b.className = "cell"; b.type = "button";
-    const total = p ? p.items.length : 0, c = checked(k).length;
-    if (p) b.style.setProperty("--c", p.c); else b.classList.add("none");
-    if (p && !p.rest) { planned++; if (isDone(k, p)) { done++; b.classList.add("done"); } }
+    const d = new Date(y, m, n), k = ymd(d), p = planOf(d);
+    const b = h("button", {class: "cell", type: "button"}, h("span", {class: "n num"}, n), h("span", {class: "dot"}), h("span", {class: "tg"}, p && !p.rest ? p.tag : ""), h("span", {class: "dg"}, h("i")));
+    const total = p ? p.items.length : 0, c = checked(k).length, t = tot(k);
+    if (p) b.style.setProperty("--c", p.c);
+    if (!p) b.classList.add("none");
+    if (p && !p.rest) { planned++; if (isDone(k, p)) done++; }
     if (p && p.rest) b.classList.add("rest");
     if (k === today) b.classList.add("today");
     if (k === ymd(sel)) b.classList.add("sel");
-    b.innerHTML = `<span class="n num">${n}</span><span class="dot"></span><span class="tg">${p && !p.rest ? p.tag : ""}</span>`;
     b.style.setProperty("--p", total ? Math.min(100, c / total * 100) : 0);
-    b.onclick = () => { sel = d; render(); if (!wide()) dlg.showModal(); };
+    b.style.setProperty("--d", Math.min(100, t.p / goal.p * 100) + "%");
+    if (t.p > 0) { psum += t.p; pdays++; }
+    b.onclick = () => { sel = d; pick = null; render(); if (!wide()) dlg.showModal(); };
     g.append(b);
   }
   $("s1").textContent = `${done}/${planned}`;
   $("s2").textContent = streak();
-  $("s3").textContent = (planned ? Math.round(done / planned * 100) : 0) + "%";
-  (wide() ? $("side") : dlg).replaceChildren(detail(sel));
+  $("s3").textContent = (planned ? r1(done / planned * 100) : 0) + "%";
+  $("s4").textContent = pdays ? r1(psum / pdays) : "-";
+  (wide() ? $("side") : dlg).replaceChildren(panel(sel));
 }
 
-function detail(d) {
-  const p = planOf(d), k = ymd(d), el = document.createElement("div");
-  el.className = "panel";
-  if (!p) { el.innerHTML = `<h2 class="big">${d.getMonth()+1}/${d.getDate()}</h2><p>운동 시작 전이에요 (첫 운동일 10/21)</p>`; return el; }
+function panel(d) {
+  const p = planOf(d), k = ymd(d), el = h("div", {class: "panel"});
+  if (!p) return el.append(h("h2", {class: "big"}, `${d.getMonth()+1}/${d.getDate()}`), h("p", {class: "sub"}, "운동 시작 전이에요 (첫 운동일 10/21)")), el;
   el.style.setProperty("--c", p.c);
-  const c = checked(k).length, total = p.items.length;
-  el.innerHTML = `<span class="tag">${p.tag}</span><h2 class="big">${p.t} ${d.getMonth()+1}/${d.getDate()} ${p.title}</h2><p></p><div class="pbar"><i style="width:${total ? c / total * 100 : 0}%"></i></div><div class="list"></div><div class="row"></div>`;
-  el.querySelector("p").textContent = `${p.week}주차${p.sub ? " · " + p.sub : ""}${total ? ` · ${c}/${total}` : ""}`;
-  const list = el.querySelector(".list");
-  if (!total) list.textContent = "푹 쉬는 날이에요. 걷기 정도만 가볍게!";
-  p.items.forEach((t, i) => {
-    const l = document.createElement("label"), cb = document.createElement("input"), s = document.createElement("span");
-    l.className = "item"; cb.type = "checkbox"; cb.checked = checked(k).includes(i); s.textContent = t;
-    cb.onchange = () => { const a = new Set(checked(k)); cb.checked ? a.add(i) : a.delete(i); store[k] = [...a]; save(); render(); };
-    l.append(cb, s); list.append(l);
-  });
-  const row = el.querySelector(".row");
-  if (total) { const a = document.createElement("button"); a.className = "pri"; a.textContent = "전부 완료"; a.onclick = () => { store[k] = p.items.map((_, i) => i); save(); render(); }; row.append(a); }
-  if (!wide()) { const x = document.createElement("button"); x.textContent = "닫기"; x.onclick = () => dlg.close(); row.append(x); }
+  el.append(h("span", {class: "tag"}, p.tag), h("h2", {class: "big"}, `${d.getMonth()+1}/${d.getDate()} ${p.title}`), h("p", {class: "sub"}, `${p.week}주차${p.sub ? " · " + p.sub : ""}`));
+  const tb = h("div", {class: "tabs"});
+  [["w", "운동"], ["d", "식단"]].forEach(([id, t]) => tb.append(h("button", {class: tab === id ? "on" : "", type: "button", onclick: () => { tab = id; pick = null; render(); }}, t)));
+  el.append(tb, tab === "w" ? workoutTab(d, p, k) : dietTab(d, k));
+  if (!wide()) el.append(h("div", {class: "row"}, h("button", {class: "btn", type: "button", onclick: () => dlg.close()}, "닫기")));
   return el;
 }
 
-const dlg = $("dlg");
-$("legend").innerHTML = DAYS.filter(d => !d.rest).map(d => `<span><i style="background:${d.c}"></i>${d.title.split(" ")[0]}</span>`).join("");
+function workoutTab(d, p, k) {
+  const el = h("div"), total = p.items.length, c = checked(k).length;
+  el.append(h("div", {class: "pbar"}, h("i", {style: `width:${total ? c / total * 100 : 0}%`})));
+  if (!total) { el.append(h("p", {class: "sub"}, "푹 쉬는 날이에요. 걷기 정도만 가볍게!")); return el; }
+  let i = 0;
+  p.groups.forEach(g => {
+    el.append(h("div", {class: "sec"}, g.h, h("small", {}, g.note)));
+    g.items.forEach(t => {
+      const idx = i++, cb = h("input", {type: "checkbox"});
+      cb.checked = checked(k).includes(idx);
+      cb.onchange = () => { const a = new Set(checked(k)); cb.checked ? a.add(idx) : a.delete(idx); store[k] = [...a]; persist(); render(); };
+      el.append(h("label", {class: "item"}, cb, h("span", {}, t)));
+    });
+  });
+  el.append(h("div", {class: "row"}, h("button", {class: "btn pri", type: "button", onclick: () => { store[k] = p.items.map((_, j) => j); persist(); render(); }}, "운동 전부 완료")));
+  return el;
+}
+
+const mac = x => `${r1(x.k * (x.q || 1))}kcal · P ${(x.p * (x.q || 1)).toFixed(1)}g`;
+function log(k, slot, f, q = 1) { dd(k).items.push({s: slot, n: f.n, k: f.k, p: f.p, q, e: f.e}); persist(); }
+
+function dietTab(d, k) {
+  const el = h("div"), t = tot(k), left = goal.p - t.p, canteen = d >= CANTEEN;
+  const bar = (v, max, col) => h("div", {class: "pbar", style: `--c:${col}`}, h("i", {style: `width:${Math.min(100, v / max * 100)}%`}));
+  el.append(h("div", {class: "macro"},
+    h("div", {class: "p"}, h("b", {class: "num"}, `${r1(t.p)}`), h("small", {}, `/ ${goal.p}g 단백질`), bar(t.p, goal.p, "var(--sky)")),
+    h("div", {class: "k"}, h("b", {class: "num", style: t.k > goal.k ? "color:var(--pink)" : ""}, `${r1(t.k)}`), h("small", {}, `/ ${goal.k}kcal`), bar(t.k, goal.k, t.k > goal.k ? "var(--pink)" : "var(--lime)"))));
+  el.append(h("p", {class: "sub", style: "margin:8px 0 0"}, left > 0 ? `남은 단백질 ${r1(left)}g` : "단백질 목표 달성 ✓"));
+
+  SLOTS.forEach(([id, label]) => {
+    const list = dd(k).items.map((x, i) => [x, i]).filter(([x]) => x.s === id);
+    const sec = h("div", {class: "slot"}, h("h3", {}, label, h("button", {class: "btn sm", type: "button", onclick: () => { pick = pick === id ? null : id; render(); }}, pick === id ? "닫기" : "+ 추가")));
+    list.forEach(([x, i]) => sec.append(h("div", {class: "ent"}, h("span", {}, x.n, x.e ? h("span", {class: "est"}, "추정") : ""), h("span", {class: "m"}, mac(x), h("button", {type: "button", "aria-label": "삭제", onclick: () => { diet[k].items.splice(i, 1); persist(); render(); }}, "✕")))));
+    if (pick === id) sec.append(picker(k, id));
+    el.append(sec);
+  });
+
+  const rec = h("div", {class: "rec"});
+  if (!canteen) {
+    const dayNo = Math.floor(d / 864e5), n = COMBOS.length, pickIdx = [0, 1, 2].map(j => (dayNo * 3 + j) % n);
+    rec.append(h("h4", {}, "오늘 점심 추천 (슬로우캘리 · 샐러디)"));
+    pickIdx.forEach(i => {
+      const fs = COMBOS[i].map(F), s = fs.reduce((a, f) => ({k: a.k + f.k, p: a.p + f.p}), {k: 0, p: 0});
+      rec.append(h("div", {class: "opt"}, h("div", {}, fs.map(f => f.n).join(" + "), h("span", {class: "m"}, `${r1(s.k)}kcal · 단백질 ${s.p.toFixed(1)}g${fs.some(f => f.e) ? " (추정)" : ""}`)),
+        h("button", {class: "btn sm", type: "button", onclick: () => { fs.forEach(f => log(k, "lunch", f)); render(); }}, "기록")));
+    });
+  } else {
+    rec.append(h("h4", {}, "점심은 구내식당 → 저녁에서 단백질 채우기"), h("p", {}, "구내식당 수치는 추정치예요. 실제와 다르면 직접 입력으로 고쳐 기록하세요."),
+      h("div", {class: "opt"}, h("div", {}, "구내식당 한 끼 (밥·국·반찬)", h("span", {class: "m"}, "700kcal · 단백질 25g (추정)")), h("button", {class: "btn sm", type: "button", onclick: () => { log(k, "lunch", F("구내식당 한 끼 (밥·국·반찬)")); render(); }}, "기록")));
+  }
+  el.append(rec);
+
+  const dn = DB.filter(x => x.g === "dinner").sort((a, b) => Math.abs(a.p - Math.max(left, 20)) - Math.abs(b.p - Math.max(left, 20))).slice(0, 3);
+  const rd = h("div", {class: "rec"}, h("h4", {}, left > 0 ? `저녁 추천 (남은 단백질 ${r1(left)}g 기준)` : "저녁 추천"));
+  dn.forEach(f => rd.append(h("div", {class: "opt"}, h("div", {}, f.n, h("span", {class: "m"}, `${f.k}kcal · 단백질 ${f.p}g (추정)`)), h("button", {class: "btn sm", type: "button", onclick: () => { log(k, "dinner", f); render(); }}, "기록"))));
+  el.append(rd);
+
+  const wc = h("input", {type: "checkbox"}); wc.checked = !!dd(k).water;
+  wc.onchange = () => { dd(k).water = wc.checked; persist(); };
+  el.append(h("label", {class: "item water"}, wc, h("span", {}, "물 2L 마시기")));
+  el.append(h("div", {class: "row"}, h("button", {class: "btn", type: "button", onclick: () => {
+    const p = parseInt(prompt("하루 단백질 목표(g)", goal.p), 10), c = parseInt(prompt("하루 칼로리 목표(kcal)", goal.k), 10);
+    if (p > 0) goal.p = p; if (c > 0) goal.k = c; persist(); render();
+  }}, "목표 수정")));
+  return el;
+}
+
+function picker(k, slot) {
+  const box = h("div", {class: "pick"}), q = h("input", {type: "search", placeholder: "음식 검색 (예: 닭가슴살, 연어)"}), list = h("div", {class: "list"});
+  const fill = () => {
+    const s = q.value.trim(); let last = "";
+    list.replaceChildren();
+    DB.filter(f => !s || f.n.includes(s)).forEach(f => {
+      if (f.g !== last) { list.append(h("div", {class: "g"}, GN[f.g])); last = f.g; }
+      list.append(h("button", {class: "f", type: "button", onclick: () => { log(k, slot, f); pick = null; render(); }}, h("span", {}, f.n, f.e ? h("span", {class: "est"}, "추정") : ""), h("span", {class: "m"}, `${r1(f.k)}kcal · P ${f.p}g`)));
+    });
+    if (!list.children.length) list.append(h("p", {class: "sub"}, "검색 결과가 없어요. 아래에서 직접 입력하세요."));
+  };
+  q.oninput = fill; fill();
+  const nm = h("input", {type: "text", placeholder: "직접 입력: 이름"}), kc = h("input", {type: "number", placeholder: "kcal"}), pr = h("input", {type: "number", placeholder: "P(g)"});
+  const ad = h("button", {class: "btn sm", type: "button", onclick: () => {
+    if (!nm.value.trim()) { nm.focus(); return; }
+    log(k, slot, {n: nm.value.trim(), k: +kc.value || 0, p: +pr.value || 0}); pick = null; render();
+  }}, "추가");
+  box.append(q, list, h("div", {class: "cu"}, nm, kc, pr, ad));
+  return box;
+}
+
+$("legend").replaceChildren(...TYPE.filter(t => !t.rest).map(t => h("span", {}, h("i", {style: `background:${t.c}`}), t.title.split(" ")[0])), h("span", {}, h("i", {class: "bar", style: "background:var(--sky)"}), "단백질 달성"));
 $("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
 $("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
 matchMedia("(min-width:900px)").addEventListener("change", render);
