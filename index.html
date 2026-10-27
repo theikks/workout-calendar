@@ -24,6 +24,9 @@ main{max-width:1120px;margin:0 auto;padding:16px}
 h1{margin:0;font-size:2.4rem;line-height:1;text-transform:uppercase}
 h1 span{color:var(--lime)}
 .nav{display:flex;gap:8px;align-items:center}
+.nav .syncb{width:auto;height:44px;padding:0 12px;font-size:.78rem;font-weight:700;color:var(--mute)}
+.nav .syncb[data-st=ok]{color:var(--sky);border-color:var(--sky)}
+.nav .syncb[data-st=err]{color:var(--pink);border-color:var(--pink)}
 .nav .m{font-family:"Barlow Condensed",sans-serif;font-style:italic;font-weight:800;font-size:1.6rem;min-width:4.5em;text-align:center}
 .nav button{background:var(--card2);border:1px solid var(--line);border-radius:12px;width:44px;height:44px;font-size:1.3rem;cursor:pointer}
 .nav button:hover{border-color:var(--lime);color:var(--lime)}
@@ -114,6 +117,8 @@ label.item input:checked+span{color:var(--mute);text-decoration:line-through}
 .pick .cu{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:6px;margin-top:8px}
 .water{margin-top:14px}
 
+#sdlg{display:block}
+#sdlg:not([open]){display:none}
 dialog{border:0;border-radius:20px;padding:0;width:min(94vw,460px);max-height:92vh;background:var(--card);color:var(--ink);overflow:auto}
 dialog::backdrop{background:#000a}
 dialog .panel{border:0;position:static;max-height:none;overflow:visible}
@@ -125,7 +130,7 @@ dialog .panel{border:0;position:static;max-height:none;overflow:visible}
 <main>
   <div class="top">
     <div class="brand"><small>BABITALK · HYOIK</small><h1>Workout <span>Log</span></h1></div>
-    <div class="nav"><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
+    <div class="nav"><button id="syncbtn" class="syncb" data-st="off" type="button">☁ 동기화 설정</button><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
   </div>
   <div class="stats">
     <div class="stat"><b class="num" id="s1">0</b><span>이번 달 운동 완료</span></div>
@@ -141,6 +146,7 @@ dialog .panel{border:0;position:static;max-height:none;overflow:visible}
   </div>
 </main>
 <dialog id="dlg"></dialog>
+<dialog id="sdlg"></dialog>
 <script>
 const h = (t, a = {}, ...c) => { const e = document.createElement(t); for (const k in a) { if (k === "class") e.className = a[k]; else if (k === "style") e.style.cssText = a[k]; else if (k.startsWith("on")) e[k] = a[k]; else e.setAttribute(k, a[k]); } c.flat().forEach(x => e.append(x instanceof Node ? x : document.createTextNode(x ?? ""))); return e; };
 const $ = id => document.getElementById(id);
@@ -242,7 +248,64 @@ const SLOTS = [["pre", "운동 전"], ["post", "운동 직후"], ["lunch", "점�
 /* ---------- 저장 ---------- */
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
 let store = load("wk2", {}), diet = load("workout-diet", {}), goal = load("workout-goal", {p: 160, k: 2000});
-const persist = () => { try { localStorage.setItem("wk2", JSON.stringify(store)); localStorage.setItem("workout-diet", JSON.stringify(diet)); localStorage.setItem("workout-goal", JSON.stringify(goal)); } catch (e) {} };
+let ts = load("workout-ts", {});  // 키별 마지막 수정 시각: c날짜(운동) d날짜(식단) g(목표)
+const localSave = () => { try { localStorage.setItem("wk2", JSON.stringify(store)); localStorage.setItem("workout-diet", JSON.stringify(diet)); localStorage.setItem("workout-goal", JSON.stringify(goal)); localStorage.setItem("workout-ts", JSON.stringify(ts)); } catch (e) {} };
+const persist = (kind, key = "") => { if (kind) ts[kind + key] = Date.now(); localSave(); clearTimeout(persist.t); persist.t = setTimeout(syncNow, 1500); };
+
+/* ---------- GitHub 동기화 (비공개 저장소 workout-data/data.json) ---------- */
+const API = "https://api.github.com/repos/theikks/workout-data/contents/data.json";
+let token = ""; try { token = localStorage.getItem("workout-token") || ""; } catch (e) {}
+let syncSt = token ? ["idle", ""] : ["off", ""];
+const canon = o => JSON.stringify(o, (k, v) => v && typeof v === "object" && !Array.isArray(v) ? Object.fromEntries(Object.keys(v).sort().map(x => [x, v[x]])) : v);
+const snapshot = () => ({checks: store, diet, goal, ts});
+function merge(l, r) {  // 키별로 더 최근에 수정한 쪽이 이김
+  const o = {checks: {...l.checks}, diet: {...l.diet}, goal: l.goal, ts: {...l.ts}};
+  Object.entries(r.ts || {}).forEach(([key, t]) => {
+    if (t <= (l.ts[key] || 0)) return;
+    o.ts[key] = t;
+    const d = key.slice(1);
+    if (key[0] === "c") { if (r.checks && d in r.checks) o.checks[d] = r.checks[d]; }
+    else if (key[0] === "d") { if (r.diet && d in r.diet) o.diet[d] = r.diet[d]; }
+    else if (key === "g" && r.goal) o.goal = r.goal;
+  });
+  return o;
+}
+const b64e = t => btoa(unescape(encodeURIComponent(t))), b64d = t => decodeURIComponent(escape(atob(t.replace(/\n/g, ""))));
+const ghx = (method, body) => fetch(API, {method, headers: {Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json"}, body: body && JSON.stringify(body)});
+function setSync(st, msg = "") { syncSt = [st, msg]; const b = $("syncbtn"); if (!b) return; b.dataset.st = st; b.textContent = ({off: "☁ 동기화 설정", idle: "☁ 동기화", syncing: "☁ 동기화 중…", ok: "☁ 동기화됨", err: "☁ 동기화 오류"})[st]; b.title = msg; }
+async function syncNow(retry = 1) {
+  if (!token) return setSync("off");
+  setSync("syncing");
+  try {
+    const r = await ghx("GET");
+    let sha, remote = {checks: {}, diet: {}, goal: null, ts: {}};
+    if (r.status === 200) { const j = await r.json(); sha = j.sha; remote = {...remote, ...JSON.parse(b64d(j.content))}; }
+    else if (r.status !== 404) throw new Error(r.status === 401 || r.status === 403 ? "토큰이 맞는지 확인하세요" : "읽기 실패 " + r.status);
+    const before = canon(snapshot()), m = merge(snapshot(), remote);
+    store = m.checks; diet = m.diet; goal = m.goal || goal; ts = m.ts; localSave();
+    if (canon(m) !== canon(remote)) {
+      const put = await ghx("PUT", {message: "sync " + new Date().toISOString(), content: b64e(JSON.stringify(m)), sha});
+      if (put.status === 409 || put.status === 422) { if (retry > 0) return syncNow(retry - 1); throw new Error("동시에 저장되어 실패, 다시 시도하세요"); }
+      if (!put.ok) throw new Error("저장 실패 " + put.status);
+    }
+    setSync("ok", new Date().toLocaleTimeString());
+    if (canon(snapshot()) !== before) render();
+  } catch (e) { setSync("err", e.message); }
+}
+function syncDialog() {
+  const d = $("sdlg"), inp = h("input", {type: "password", placeholder: "github_pat_...", autocomplete: "off", style: "width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:10px;color:var(--ink);font:inherit"});
+  inp.value = token;
+  const msg = h("p", {class: "sub"}, syncSt[1] ? `상태: ${syncSt[1]}` : "");
+  d.replaceChildren(h("div", {class: "panel", style: "--c:var(--sky)"},
+    h("h2", {class: "big"}, "기기 간 동기화"),
+    h("p", {class: "sub"}, "비공개 저장소 workout-data에 기록을 저장해요. 이 저장소만 읽고 쓸 수 있는 토큰을 이 브라우저에 한 번만 붙여넣으면 돼요."),
+    inp, msg,
+    h("div", {class: "row"},
+      h("button", {class: "btn pri", type: "button", onclick: async () => { token = inp.value.trim(); try { localStorage.setItem("workout-token", token); } catch (e) {} await syncNow(); msg.textContent = syncSt[0] === "ok" ? "연결됐어요 ✓" : `오류: ${syncSt[1]}`; }}, "저장하고 동기화"),
+      h("button", {class: "btn", type: "button", onclick: () => { token = ""; try { localStorage.removeItem("workout-token"); } catch (e) {} setSync("off"); d.close(); }}, "연결 해제"),
+      h("button", {class: "btn", type: "button", onclick: () => d.close()}, "닫기"))));
+  d.showModal();
+}
 const checked = k => store[k] || [];
 const isDone = (k, p) => p && !p.rest && p.items.length && checked(k).length >= p.items.length;
 const dd = k => diet[k] || (diet[k] = {items: [], water: false});
@@ -316,16 +379,16 @@ function workoutTab(d, p, k) {
     g.items.forEach(t => {
       const idx = i++, cb = h("input", {type: "checkbox"});
       cb.checked = checked(k).includes(idx);
-      cb.onchange = () => { const a = new Set(checked(k)); cb.checked ? a.add(idx) : a.delete(idx); store[k] = [...a]; persist(); render(); };
+      cb.onchange = () => { const a = new Set(checked(k)); cb.checked ? a.add(idx) : a.delete(idx); store[k] = [...a]; persist("c", k); render(); };
       el.append(h("label", {class: "item"}, cb, h("span", {}, t)));
     });
   });
-  el.append(h("div", {class: "row"}, h("button", {class: "btn pri", type: "button", onclick: () => { store[k] = p.items.map((_, j) => j); persist(); render(); }}, "운동 전부 완료")));
+  el.append(h("div", {class: "row"}, h("button", {class: "btn pri", type: "button", onclick: () => { store[k] = p.items.map((_, j) => j); persist("c", k); render(); }}, "운동 전부 완료")));
   return el;
 }
 
 const mac = x => `${r1(x.k * (x.q || 1))}kcal · P ${(x.p * (x.q || 1)).toFixed(1)}g`;
-function log(k, slot, f, q = 1) { dd(k).items.push({s: slot, n: f.n, k: f.k, p: f.p, q, e: f.e}); persist(); }
+function log(k, slot, f, q = 1) { dd(k).items.push({s: slot, n: f.n, k: f.k, p: f.p, q, e: f.e}); persist("d", k); }
 
 function dietTab(d, k) {
   const el = h("div"), t = tot(k), left = goal.p - t.p, canteen = d >= CANTEEN;
@@ -336,9 +399,9 @@ function dietTab(d, k) {
   el.append(h("p", {class: "sub", style: "margin:8px 0 0"}, left > 0 ? `남은 단백질 ${r1(left)}g` : "단백질 목표 달성 ✓"));
 
   SLOTS.forEach(([id, label]) => {
-    const list = dd(k).items.map((x, i) => [x, i]).filter(([x]) => x.s === id);
+    const list = (diet[k]?.items || []).map((x, i) => [x, i]).filter(([x]) => x.s === id);
     const sec = h("div", {class: "slot"}, h("h3", {}, label, h("button", {class: "btn sm", type: "button", onclick: () => { pick = pick === id ? null : id; render(); }}, pick === id ? "닫기" : "+ 추가")));
-    list.forEach(([x, i]) => sec.append(h("div", {class: "ent"}, h("span", {}, x.n, x.e ? h("span", {class: "est"}, "추정") : ""), h("span", {class: "m"}, mac(x), h("button", {type: "button", "aria-label": "삭제", onclick: () => { diet[k].items.splice(i, 1); persist(); render(); }}, "✕")))));
+    list.forEach(([x, i]) => sec.append(h("div", {class: "ent"}, h("span", {}, x.n, x.e ? h("span", {class: "est"}, "추정") : ""), h("span", {class: "m"}, mac(x), h("button", {type: "button", "aria-label": "삭제", onclick: () => { diet[k].items.splice(i, 1); persist("d", k); render(); }}, "✕")))));
     if (pick === id) sec.append(picker(k, id));
     el.append(sec);
   });
@@ -363,12 +426,12 @@ function dietTab(d, k) {
   dn.forEach(f => rd.append(h("div", {class: "opt"}, h("div", {}, f.n, h("span", {class: "m"}, `${f.k}kcal · 단백질 ${f.p}g (추정)`)), h("button", {class: "btn sm", type: "button", onclick: () => { log(k, "dinner", f); render(); }}, "기록"))));
   el.append(rd);
 
-  const wc = h("input", {type: "checkbox"}); wc.checked = !!dd(k).water;
-  wc.onchange = () => { dd(k).water = wc.checked; persist(); };
+  const wc = h("input", {type: "checkbox"}); wc.checked = !!diet[k]?.water;
+  wc.onchange = () => { dd(k).water = wc.checked; persist("d", k); };
   el.append(h("label", {class: "item water"}, wc, h("span", {}, "물 2L 마시기")));
   el.append(h("div", {class: "row"}, h("button", {class: "btn", type: "button", onclick: () => {
     const p = parseInt(prompt("하루 단백질 목표(g)", goal.p), 10), c = parseInt(prompt("하루 칼로리 목표(kcal)", goal.k), 10);
-    if (p > 0) goal.p = p; if (c > 0) goal.k = c; persist(); render();
+    if (p > 0) goal.p = p; if (c > 0) goal.k = c; persist("g"); render();
   }}, "목표 수정")));
   return el;
 }
@@ -398,7 +461,10 @@ $("legend").replaceChildren(...TYPE.filter(t => !t.rest).map(t => h("span", {}, 
 $("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
 $("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
 matchMedia("(min-width:900px)").addEventListener("change", render);
+$("syncbtn").onclick = syncDialog;
 render();
+setSync(token ? "idle" : "off");
+syncNow();
 </script>
 </body>
 </html>
