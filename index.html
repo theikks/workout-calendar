@@ -3,71 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
 <title>운동 캘린더</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--ink:#1b1f24;--mute:#6b7380;--line:#e4e7ec;--acc:#2f6fed;--done:#1fa971;--rest:#aab1bd}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#181c22;--ink:#eef0f3;--mute:#8d96a3;--line:#262c35;--acc:#6b9bff;--done:#34c88a;--rest:#59616e}}
+:root{--bg:#0b0d10;--card:#14181d;--card2:#1b2027;--ink:#f2f4f7;--mute:#8a94a3;--line:#242a33;--lime:#c6ff3d;--ink-on-lime:#0b0d10}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
-main{max-width:520px;margin:0 auto;padding:16px;overflow-x:hidden}
-header{display:flex;align-items:center;justify-content:space-between;margin:8px 0 4px}
-h1{font-size:20px;margin:0}
-.nav button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:10px;width:40px;height:40px;font-size:18px;cursor:pointer}
-.stat{color:var(--mute);font-size:14px;margin:0 0 12px}
-.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-.dow{text-align:center;color:var(--mute);font-size:13px;padding:4px 0}
-.cell{min-width:0;min-height:62px;overflow:hidden;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
-.cell.empty{background:transparent;border:0;cursor:default}
-.cell .n{font-size:12px;color:var(--mute)}
-.cell .t{font-size:16px;line-height:1}
-.cell .bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
-.cell .bar i{display:block;height:100%;background:var(--acc)}
-.cell.today{outline:2px solid var(--acc)}
-.cell.done{background:color-mix(in srgb,var(--done) 18%,var(--card));border-color:var(--done)}
-.cell.done .bar i{background:var(--done)}
-.cell.rest .t{opacity:.45}
-.legend{color:var(--mute);font-size:13px;margin-top:16px;clear:both}
-dialog{border:0;border-radius:16px;padding:0;width:min(92vw,440px);background:var(--card);color:var(--ink)}
-dialog::backdrop{background:#0008}
-.box{padding:18px}
-.box h2{margin:0 0 2px;font-size:18px}
-.box p{margin:0 0 12px;color:var(--mute);font-size:14px}
-label.item{display:flex;gap:10px;align-items:flex-start;padding:10px 4px;border-top:1px solid var(--line);cursor:pointer}
-label.item input{width:22px;height:22px;margin-top:1px;accent-color:var(--done);flex:none}
+html{font-size:16px}
+@media(min-width:900px){html{font-size:18px}}
+body{margin:0;background:radial-gradient(1200px 500px at 70% -10%,#1c2a10 0,transparent 60%),var(--bg);color:var(--ink);font:1rem/1.5 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;min-height:100vh}
+.num,h1,.big{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;font-style:italic;font-weight:800;letter-spacing:.01em}
+main{max-width:1120px;margin:0 auto;padding:16px}
+@media(min-width:900px){main{padding:32px}}
+
+/* top */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand small{display:block;color:var(--lime);font-size:.75rem;letter-spacing:.25em;font-weight:700}
+h1{margin:0;font-size:2.4rem;line-height:1;text-transform:uppercase}
+h1 span{color:var(--lime)}
+.nav{display:flex;gap:8px;align-items:center}
+.nav .m{font-family:"Barlow Condensed",sans-serif;font-style:italic;font-weight:800;font-size:1.6rem;min-width:4.5em;text-align:center}
+.nav button{background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:12px;width:44px;height:44px;font-size:1.3rem;cursor:pointer}
+.nav button:hover{border-color:var(--lime);color:var(--lime)}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.stat b{display:block;font-size:2rem;line-height:1.1}
+.stat span{color:var(--mute);font-size:.8rem}
+.stat.hot b{color:var(--lime)}
+
+/* layout */
+.wrap{display:grid;gap:18px}
+@media(min-width:900px){.wrap{grid-template-columns:1fr 340px;align-items:start}}
+
+/* calendar */
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+@media(min-width:900px){.grid{gap:8px}}
+.dow{text-align:center;color:var(--mute);font-size:.8rem;font-weight:700;letter-spacing:.1em;padding:4px 0}
+.cell{--c:#64748b;position:relative;min-width:0;min-height:64px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:12px;padding:5px 6px;display:flex;flex-direction:column;justify-content:space-between;color:var(--ink);font:inherit;text-align:left;cursor:pointer;overflow:hidden;transition:transform .12s,border-color .12s}
+@media(min-width:900px){.cell{min-height:96px;padding:8px 10px;border-radius:14px}}
+.cell:hover{transform:translateY(-2px);border-color:var(--c)}
+.cell.empty{background:transparent;border:0;cursor:default;pointer-events:none}
+.cell .n{font-size:1.15rem;line-height:1;color:var(--mute)}
+.cell .t{font-size:1.1rem;line-height:1}
+@media(min-width:900px){.cell .n{font-size:1.4rem}.cell .t{font-size:1.4rem}}
+.cell .bar{height:4px;border-radius:2px;background:#ffffff14;overflow:hidden}
+.cell .bar i{display:block;height:100%;background:var(--c)}
+.cell.rest{opacity:.55}
+.cell.none{border-top-color:var(--line)}
+.cell.sel{border-color:var(--lime);box-shadow:0 0 0 1px var(--lime)}
+.cell.today .n{color:var(--lime)}
+.cell.today::after{content:"TODAY";position:absolute;top:6px;right:6px;font-size:.5rem;font-weight:800;letter-spacing:.12em;color:var(--lime)}
+@media(max-width:899px){.cell.today::after{display:none}.cell.today{border-color:var(--lime)}}
+.cell.done{background:var(--c)}
+.cell.done .n,.cell.done .t{color:#0b0d10}
+.cell.done .bar{background:#0b0d1030}.cell.done .bar i{background:#0b0d10}
+.cell.done::before{content:"✓";position:absolute;right:8px;bottom:12px;font-size:1.3rem;font-weight:900;color:#0b0d10}
+
+/* detail */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+@media(min-width:900px){.panel{position:sticky;top:24px}}
+.panel .tag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.15em;padding:3px 10px;border-radius:99px;background:var(--c);color:#0b0d10}
+.panel h2{margin:8px 0 2px;font-size:1.7rem;line-height:1.1}
+.panel p{margin:0 0 12px;color:var(--mute);font-size:.85rem}
+.pbar{height:8px;border-radius:4px;background:#ffffff14;overflow:hidden;margin:6px 0 10px}
+.pbar i{display:block;height:100%;background:var(--c);transition:width .25s}
+label.item{display:flex;gap:12px;align-items:flex-start;padding:11px 4px;border-top:1px solid var(--line);cursor:pointer}
+label.item input{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;border:2px solid #4a5463;border-radius:8px;margin-top:1px;display:grid;place-items:center;cursor:pointer;background:transparent}
+label.item input:checked{background:var(--c);border-color:var(--c)}
+label.item input:checked::after{content:"✓";color:#0b0d10;font-weight:900;font-size:.9rem}
 label.item input:checked+span{color:var(--mute);text-decoration:line-through}
 .row{display:flex;gap:8px;margin-top:14px}
-.row button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
-.row .pri{background:var(--done);border-color:var(--done);color:#fff}
+.row button{flex:1;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.row .pri{background:var(--lime);border-color:var(--lime);color:var(--ink-on-lime)}
+.hint{color:var(--mute);font-size:.8rem;margin-top:16px}
+dialog{border:0;border-radius:20px;padding:0;width:min(94vw,440px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:#000a}
+dialog .panel{border:0;position:static}
+@media(min-width:900px){dialog{display:none}}
+@media(max-width:899px){#side{display:none}}
 </style>
 </head>
 <body>
 <main>
-  <header>
-    <h1 id="title"></h1>
-    <div class="nav"><button id="prev" aria-label="이전 달">‹</button> <button id="next" aria-label="다음 달">›</button></div>
-  </header>
-  <p class="stat" id="stat"></p>
-  <div class="grid" id="grid"></div>
-  <p class="legend">날짜를 누르면 오늘 운동 체크리스트가 열려요. 기록은 이 기기 브라우저에만 저장돼요.</p>
+  <div class="top">
+    <div class="brand"><small>BABITALK · HYOIK</small><h1>Workout <span>Log</span></h1></div>
+    <div class="nav"><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b class="num" id="s1">0</b><span>이번 달 완료</span></div>
+    <div class="stat hot"><b class="num" id="s2">0</b><span>🔥 연속 운동일</span></div>
+    <div class="stat"><b class="num" id="s3">0%</b><span>이번 달 달성률</span></div>
+  </div>
+  <div class="wrap">
+    <div><div class="grid" id="grid"></div><p class="hint">날짜를 눌러 운동 체크리스트를 열어요. 기록은 이 기기 브라우저에만 저장돼요.</p></div>
+    <aside id="side"></aside>
+  </div>
 </main>
-<dialog id="dlg"><div class="box">
-  <h2 id="dt"></h2><p id="ds"></p>
-  <div id="list"></div>
-  <div class="row"><button id="all" class="pri">전부 완료</button><button id="close">닫기</button></div>
-</div></dialog>
+<dialog id="dlg"></dialog>
 <script>
 // 1주차 월요일. 첫 운동일은 2026-10-21(수)
 const START = new Date(2026, 9, 19), FIRST = new Date(2026, 9, 21);
 const CARDIO = "🚴 유산소 15분 (자전거/인클라인, 러닝X)";
 const STAIRS = "🪜 천국의계단 10분 (Lv4~6, 손잡이 기대지X)";
 const DAYS = [
-  {t: "💪", title: "등+이두", w: true, items: [CARDIO, "랫풀다운", "시티드 케이블로우", "원암 덤벨로우", "스트레이트암 풀다운", "백익스텐션", "덤벨컬", STAIRS]},
-  {t: "🏋️", title: "어깨+코어", w: true, items: [CARDIO, "앉아서 숄더프레스", "사이드 레터럴레이즈", "리어델트 플라이", "페이스풀", "덤벨 슈러그", "데드버그 3x10 / 플랭크 3x40초", STAIRS]},
-  {t: "🔥", title: "가슴+삼두", w: true, items: [CARDIO, "체스트프레스 / 덤벨벤치 (무게 욕심X)", "인클라인 덤벨프레스", "펙덱 플라이", "케이블 푸시다운", "오버헤드 케이블 익스텐션", STAIRS]},
-  {t: "🦵", title: "하체 (무릎 재활)", w: true, items: ["🚴 자전거 15분 + 클램쉘·브릿지 2x15", "한다리 레그프레스 (왼쪽 먼저, 90°까지)", "양발 레그프레스 (발 높게, 90°)", "덤벨 RDL", "힙쓰러스트", "레그컬", "레그익스텐션 가볍게", "어브덕션/어덕션 2x15", "카프레이즈", "🪜 천국의계단 5분 or 자전거"]},
-  {t: "🎯", title: "자유운동 (약점보완)", free: true, items: ["🚴 자전거 or 인클라인 걷기 20분"]},
-  {t: "😴", title: "휴식", rest: true, items: []},
-  {t: "🎾", title: "테니스 9시", items: ["🔥 8:30 워밍업 10분 (발목·무릎 돌리기, 제자리 스텝)", "테니스 (급정지·방향전환 때 왼무릎 주의)", "스트레칭 (허벅지·종아리)"]},
+  {c: "#3b82f6", tag: "BACK", t: "💪", title: "등 + 이두", w: true, items: [CARDIO, "랫풀다운", "시티드 케이블로우", "원암 덤벨로우", "스트레이트암 풀다운", "백익스텐션", "덤벨컬", STAIRS]},
+  {c: "#a855f7", tag: "SHOULDER", t: "🏋️", title: "어깨 + 코어", w: true, items: [CARDIO, "앉아서 숄더프레스", "사이드 레터럴레이즈", "리어델트 플라이", "페이스풀", "덤벨 슈러그", "데드버그 3x10 / 플랭크 3x40초", STAIRS]},
+  {c: "#f97316", tag: "CHEST", t: "🔥", title: "가슴 + 삼두", w: true, items: [CARDIO, "체스트프레스 / 덤벨벤치 (무게 욕심X)", "인클라인 덤벨프레스", "펙덱 플라이", "케이블 푸시다운", "오버헤드 케이블 익스텐션", STAIRS]},
+  {c: "#22c55e", tag: "LEGS", t: "🦵", title: "하체 (무릎 재활)", w: true, items: ["🚴 자전거 15분 + 클램쉘·브릿지 2x15", "한다리 레그프레스 (왼쪽 먼저, 90°까지)", "양발 레그프레스 (발 높게, 90°)", "덤벨 RDL", "힙쓰러스트", "레그컬", "레그익스텐션 가볍게", "어브덕션/어덕션 2x15", "카프레이즈", "🪜 천국의계단 5분 or 자전거"]},
+  {c: "#eab308", tag: "FREE", t: "🎯", title: "자유운동 (약점보완)", free: true, items: ["🚴 자전거 or 인클라인 걷기 20분"]},
+  {c: "#64748b", tag: "REST", t: "😴", title: "휴식", rest: true, items: []},
+  {c: "#c6ff3d", tag: "TENNIS", t: "🎾", title: "테니스 9시", items: ["🔥 8:30 워밍업 10분 (발목·무릎 돌리기, 제자리 스텝)", "테니스 (급정지·방향전환 때 왼무릎 주의)", "스트레칭 (허벅지·종아리)"]},
 ];
 const FREE = [
   ["전신 서킷 3바퀴", "고블릿 박스스쿼트", "덤벨로우", "푸시업", "데드버그", "플랭크"],
@@ -87,13 +135,27 @@ let store = {};
 try { store = JSON.parse(localStorage.getItem("workout-checks") || "{}"); } catch (e) {}
 const save = () => { try { localStorage.setItem("workout-checks", JSON.stringify(store)); } catch (e) {} };
 const checked = k => store[k] || [];
+const isDone = (k, p) => p && !p.rest && p.items.length && checked(k).length >= p.items.length;
 
-let view = new Date(); view.setDate(1);
 const $ = id => document.getElementById(id);
+const wide = () => matchMedia("(min-width:900px)").matches;
+let view = new Date(); view.setDate(1);
+let sel = new Date();
+
+function streak() {
+  let n = 0;
+  for (let i = 0, d = new Date(); i < 150; i++, d.setDate(d.getDate() - 1)) {
+    const p = planOf(d); if (!p) break;
+    if (p.rest) continue;
+    if (isDone(ymd(d), p)) n++;
+    else if (i > 0) break;
+  }
+  return n;
+}
 
 function render() {
   const y = view.getFullYear(), m = view.getMonth(), g = $("grid");
-  $("title").textContent = `${y}년 ${m + 1}월`;
+  $("title").textContent = `${y}.${String(m + 1).padStart(2, "0")}`;
   g.replaceChildren();
   "월화수목금토일".split("").forEach(c => { const e = document.createElement("div"); e.className = "dow"; e.textContent = c; g.append(e); });
   const lead = (new Date(y, m, 1).getDay() + 6) % 7, last = new Date(y, m + 1, 0).getDate(), today = ymd(new Date());
@@ -103,37 +165,47 @@ function render() {
     const d = new Date(y, m, n), k = ymd(d), p = planOf(d), b = document.createElement("button");
     b.className = "cell"; b.type = "button";
     const total = p ? p.items.length : 0, c = checked(k).length;
-    if (p && !p.rest) { planned++; if (total && c >= total) { done++; b.classList.add("done"); } }
+    if (p) b.style.setProperty("--c", p.c); else b.classList.add("none");
+    if (p && !p.rest) { planned++; if (isDone(k, p)) { done++; b.classList.add("done"); } }
     if (p && p.rest) b.classList.add("rest");
     if (k === today) b.classList.add("today");
-    b.innerHTML = `<span class="n">${n}</span><span class="t">${p ? p.t : ""}</span><span class="bar"><i style="width:${total ? Math.min(100, c / total * 100) : 0}%"></i></span>`;
-    b.onclick = () => open(d);
+    if (k === ymd(sel)) b.classList.add("sel");
+    b.innerHTML = `<span class="n num">${n}</span><span class="t">${p ? p.t : ""}</span><span class="bar"><i style="width:${total ? Math.min(100, c / total * 100) : 0}%"></i></span>`;
+    b.onclick = () => { sel = d; render(); if (!wide()) dlg.showModal(); };
     g.append(b);
   }
-  $("stat").textContent = planned ? `이번 달 완료 ${done} / ${planned}일` : "운동 시작 전이에요";
+  $("s1").textContent = `${done}/${planned}`;
+  $("s2").textContent = streak();
+  $("s3").textContent = (planned ? Math.round(done / planned * 100) : 0) + "%";
+  (wide() ? $("side") : dlg).replaceChildren(detail(sel));
 }
 
-let cur;
-function open(d) {
-  const p = planOf(d); if (!p) return;
-  cur = {k: ymd(d), p};
-  $("dt").textContent = `${p.t} ${d.getMonth()+1}/${d.getDate()} ${p.title}`;
-  $("ds").textContent = p.sub ? `${p.week}주차 · ${p.sub}` : `${p.week}주차`;
-  const list = $("list"); list.replaceChildren();
-  if (!p.items.length) list.textContent = "푹 쉬는 날이에요. 걷기 정도만 가볍게!";
+function detail(d) {
+  const p = planOf(d), k = ymd(d), el = document.createElement("div");
+  el.className = "panel";
+  if (!p) { el.innerHTML = `<h2 class="big">${d.getMonth()+1}/${d.getDate()}</h2><p>운동 시작 전이에요 (첫 운동일 10/21)</p>`; return el; }
+  el.style.setProperty("--c", p.c);
+  const c = checked(k).length, total = p.items.length;
+  el.innerHTML = `<span class="tag">${p.tag}</span><h2 class="big">${p.t} ${d.getMonth()+1}/${d.getDate()} ${p.title}</h2><p></p><div class="pbar"><i style="width:${total ? c / total * 100 : 0}%"></i></div><div class="list"></div><div class="row"></div>`;
+  el.querySelector("p").textContent = `${p.week}주차${p.sub ? " · " + p.sub : ""}${total ? ` · ${c}/${total}` : ""}`;
+  const list = el.querySelector(".list");
+  if (!total) list.textContent = "푹 쉬는 날이에요. 걷기 정도만 가볍게!";
   p.items.forEach((t, i) => {
-    const l = document.createElement("label"), c = document.createElement("input"), s = document.createElement("span");
-    l.className = "item"; c.type = "checkbox"; c.checked = checked(cur.k).includes(i); s.textContent = t;
-    c.onchange = () => { const a = new Set(checked(cur.k)); c.checked ? a.add(i) : a.delete(i); store[cur.k] = [...a]; save(); render(); };
-    l.append(c, s); list.append(l);
+    const l = document.createElement("label"), cb = document.createElement("input"), s = document.createElement("span");
+    l.className = "item"; cb.type = "checkbox"; cb.checked = checked(k).includes(i); s.textContent = t;
+    cb.onchange = () => { const a = new Set(checked(k)); cb.checked ? a.add(i) : a.delete(i); store[k] = [...a]; save(); render(); };
+    l.append(cb, s); list.append(l);
   });
-  $("all").hidden = !p.items.length;
-  $("dlg").showModal();
+  const row = el.querySelector(".row");
+  if (total) { const a = document.createElement("button"); a.className = "pri"; a.textContent = "전부 완료"; a.onclick = () => { store[k] = p.items.map((_, i) => i); save(); render(); }; row.append(a); }
+  if (!wide()) { const x = document.createElement("button"); x.textContent = "닫기"; x.onclick = () => dlg.close(); row.append(x); }
+  return el;
 }
-$("all").onclick = () => { store[cur.k] = cur.p.items.map((_, i) => i); save(); render(); $("dlg").close(); };
-$("close").onclick = () => $("dlg").close();
+
+const dlg = $("dlg");
 $("prev").onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
 $("next").onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
+matchMedia("(min-width:900px)").addEventListener("change", render);
 render();
 </script>
 </body>
