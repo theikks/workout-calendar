@@ -25,11 +25,13 @@ main{max-width:1120px;margin:0 auto;padding:16px}
 .brand small{display:block;color:var(--lime);font-size:.75rem;letter-spacing:.25em;font-weight:700}
 h1{margin:0;font-size:2.4rem;line-height:1;text-transform:uppercase}
 h1 span{color:var(--lime)}
-.nav{display:flex;gap:8px;align-items:center}
+.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .nav #themebtn{font-size:1.1rem}
-.nav .syncb{width:auto;height:44px;padding:0 12px;font-size:.78rem;font-weight:700;color:var(--mute)}
+.nav .syncb{width:auto;height:44px;padding:0 10px;font-size:.78rem;font-weight:700;color:var(--mute);white-space:nowrap}
 .nav .syncb[data-st=ok]{color:var(--sky);border-color:var(--sky)}
 .nav .syncb[data-st=err]{color:var(--pink);border-color:var(--pink)}
+.nav .m{white-space:nowrap}
+@media(max-width:420px){.nav{gap:6px}.nav button{width:40px;height:40px}.nav .syncb{height:40px}.nav .m{min-width:3.9em;font-size:1.4rem}}
 .nav .m{font-family:"Barlow Condensed",sans-serif;font-style:italic;font-weight:800;font-size:1.6rem;min-width:4.5em;text-align:center}
 .nav button{background:var(--card2);border:1px solid var(--line);border-radius:12px;width:44px;height:44px;font-size:1.3rem;cursor:pointer}
 .nav button:hover{border-color:var(--lime);color:var(--lime)}
@@ -122,6 +124,8 @@ label.item input:checked+span{color:var(--mute);text-decoration:line-through}
 
 #sdlg{display:block}
 #sdlg:not([open]){display:none}
+html.lock,html.lock body{overflow:hidden;height:100%}
+dialog{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 dialog{border:0;border-radius:20px;padding:0;width:min(94vw,460px);max-height:92vh;background:var(--card);color:var(--ink);overflow:auto}
 dialog::backdrop{background:#000a}
 dialog .panel{border:0;position:static;max-height:none;overflow:visible}
@@ -133,7 +137,7 @@ dialog .panel{border:0;position:static;max-height:none;overflow:visible}
 <main>
   <div class="top">
     <div class="brand"><small>HYOIK</small><h1>Workout <span>Log</span></h1></div>
-    <div class="nav"><button id="themebtn" type="button" aria-label="테마 전환">🌓</button><button id="syncbtn" class="syncb" data-st="off" type="button">☁ 동기화 설정</button><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
+    <div class="nav"><button id="themebtn" type="button" aria-label="테마 전환">🌓</button><button id="syncbtn" class="syncb" data-st="off" type="button">☁ 동기화</button><button id="prev" aria-label="이전 달">‹</button><div class="m" id="title"></div><button id="next" aria-label="다음 달">›</button></div>
   </div>
   <div class="stats">
     <div class="stat"><b class="num" id="s1">0</b><span>이번 달 운동 완료</span></div>
@@ -275,7 +279,7 @@ function merge(l, r) {  // 키별로 더 최근에 수정한 쪽이 이김
 }
 const b64e = t => btoa(unescape(encodeURIComponent(t))), b64d = t => decodeURIComponent(escape(atob(t.replace(/\n/g, ""))));
 const ghx = (method, body) => fetch(API, {method, headers: {Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json"}, body: body && JSON.stringify(body)});
-function setSync(st, msg = "") { syncSt = [st, msg]; const b = $("syncbtn"); if (!b) return; b.dataset.st = st; b.textContent = ({off: "☁ 동기화 설정", idle: "☁ 동기화", syncing: "☁ 동기화 중…", ok: "☁ 동기화됨", err: "☁ 동기화 오류"})[st]; b.title = msg; }
+function setSync(st, msg = "") { syncSt = [st, msg]; const b = $("syncbtn"); if (!b) return; b.dataset.st = st; b.textContent = ({off: "☁ 동기화", idle: "☁ 동기화", syncing: "☁ …", ok: "☁ 동기화됨", err: "☁ 오류"})[st]; b.title = msg; }
 async function syncNow(retry = 1) {
   if (!token) return setSync("off");
   setSync("syncing");
@@ -305,9 +309,9 @@ function syncDialog() {
     inp, msg,
     h("div", {class: "row"},
       h("button", {class: "btn pri", type: "button", onclick: async () => { token = inp.value.trim(); try { localStorage.setItem("workout-token", token); } catch (e) {} await syncNow(); msg.textContent = syncSt[0] === "ok" ? "연결됐어요 ✓" : `오류: ${syncSt[1]}`; }}, "저장하고 동기화"),
-      h("button", {class: "btn", type: "button", onclick: () => { token = ""; try { localStorage.removeItem("workout-token"); } catch (e) {} setSync("off"); d.close(); }}, "연결 해제"),
-      h("button", {class: "btn", type: "button", onclick: () => d.close()}, "닫기"))));
-  d.showModal();
+      h("button", {class: "btn", type: "button", onclick: () => { token = ""; try { localStorage.removeItem("workout-token"); } catch (e) {} setSync("off"); closeDlg(d); }}, "연결 해제"),
+      h("button", {class: "btn", type: "button", onclick: () => closeDlg(d)}, "닫기"))));
+  showDlg(d);
 }
 const checked = k => store[k] || [];
 const isDone = (k, p) => p && !p.rest && p.items.length && checked(k).length >= p.items.length;
@@ -319,6 +323,11 @@ const wide = () => matchMedia("(min-width:900px)").matches;
 let view = new Date(); view.setDate(1);
 let sel = new Date(), tab = "w", pick = null;
 const dlg = $("dlg");
+// 팝업이 열려 있는 동안 뒤 화면 스크롤 잠금, 바깥(배경)을 누르면 닫기
+const lock = on => document.documentElement.classList.toggle("lock", on);
+["dlg", "sdlg"].forEach(id => { const d = $(id); d.addEventListener("close", () => lock(false)); d.addEventListener("click", e => { if (e.target === d) closeDlg(d); }); });
+const showDlg = d => { d.showModal(); lock(true); };
+const closeDlg = d => { d.close(); lock(false); };
 
 function streak() {
   let n = 0;
@@ -350,7 +359,7 @@ function render() {
     b.style.setProperty("--p", total ? Math.min(100, c / total * 100) : 0);
     b.style.setProperty("--d", Math.min(100, t.p / goal.p * 100) + "%");
     if (t.p > 0) { psum += t.p; pdays++; }
-    b.onclick = () => { sel = d; pick = null; render(); if (!wide()) dlg.showModal(); };
+    b.onclick = () => { sel = d; pick = null; render(); if (!wide()) showDlg(dlg); };
     g.append(b);
   }
   $("s1").textContent = `${done}/${planned}`;
@@ -368,7 +377,7 @@ function panel(d) {
   const tb = h("div", {class: "tabs"});
   [["w", "운동"], ["d", "식단"]].forEach(([id, t]) => tb.append(h("button", {class: tab === id ? "on" : "", type: "button", onclick: () => { tab = id; pick = null; render(); }}, t)));
   el.append(tb, tab === "w" ? workoutTab(d, p, k) : dietTab(d, k));
-  if (!wide()) el.append(h("div", {class: "row"}, h("button", {class: "btn", type: "button", onclick: () => dlg.close()}, "닫기")));
+  if (!wide()) el.append(h("div", {class: "row"}, h("button", {class: "btn", type: "button", onclick: () => closeDlg(dlg)}, "닫기")));
   return el;
 }
 
